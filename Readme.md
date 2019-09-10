@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
-* Студент: [Anastasia Alimpieva](https://up.htmlacademy.ru/javascript/18/user/120928).
-* Наставник: `Неизвестно`.
+- Студент: [Anastasia Alimpieva](https://up.htmlacademy.ru/javascript/18/user/120928).
+- Наставник: [Екатерина Кащенко](https://htmlacademy.ru/profile/id109008).
 
 ---
 
