@@ -10,6 +10,8 @@ var PHOTOS_OBJECT = [
   'http://o0.github.io/assets/images/tokyo/hotel3.jpg'
 ];
 var CHECKIN_CHECKOUT_TIME = ['12:00', '13:00', '14:00'];
+var PIN_NUMBER = 8;
+var PIN_WIDTH = 40;
 
 // cлучайное число диапазона
 var getRandomInteger = function (min, max) {
@@ -44,12 +46,37 @@ var getAvatarUrl = function (number) {
 // генерация локации предложения
 var getOfferLocation = function () {
   return {
-    x: getRandomInteger(0, 1000),
+    x: getRandomInteger(PIN_WIDTH, 1000),
     y: getRandomInteger(COORDINATES_Y_MIN, COORDINATES_Y_MAX)
   };
 };
 
-// генерация мока в предложении
+var updateMapPin = function (mapPin, data) {
+  var pinElement = mapPin.querySelector('.map__pin');
+  pinElement.style.left = data.location.x + 'px';
+  pinElement.style.top = data.location.y + 'px';
+  var imgElement = pinElement.querySelector('img');
+  imgElement.src = data.author.avatar;
+  imgElement.alt = data.offer.title;
+  return pinElement;
+};
+
+var renderMapPins = function (offers) {
+  var listElement = document.querySelector('.map__pins');
+  var fragment = document.createDocumentFragment();
+  var pinTemplate = document.querySelector('#pin')
+    .content;
+
+  for (var i = 0; i < offers.length; i++) {
+    var offer = offers[i];
+    var pinElement = updateMapPin(pinTemplate.cloneNode(true), offer);
+    fragment.appendChild(pinElement);
+  }
+
+  listElement.appendChild(fragment);
+};
+
+// генерация моков предложения
 var getMockOffers = function (size) {
   var offers = [];
 
@@ -79,3 +106,6 @@ var getMockOffers = function (size) {
 
   return offers;
 };
+
+var offers = getMockOffers(PIN_NUMBER);
+renderMapPins(offers);
