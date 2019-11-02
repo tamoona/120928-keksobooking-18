@@ -13,6 +13,32 @@ var CHECKIN_CHECKOUT_TIME = ['12:00', '13:00', '14:00'];
 var PIN_NUMBER = 8;
 var PIN_WIDTH = 40;
 
+// функция, переключающая состояние карты
+var toggleMap = function (state) {
+  document.querySelector('.map').classList.toggle('map--faded', !state);
+};
+
+// функция, переключающая состояния полей
+var toggleFieldset = function (state) {
+  var fieldsetElements = document.querySelectorAll('.ad-form fieldset');
+  for (var i = 0; i < fieldsetElements.length; i++) {
+    fieldsetElements[i].disabled = !state;
+  }
+};
+
+// функция, переключающая активное состояние формы с фильтрами
+var toggleFilters = function (state) {
+  var filtersElements = document.querySelectorAll('.map__filters select, .map__filters fieldset');
+  for (var i = 0; i < filtersElements.length; i++) {
+    filtersElements[i].disabled = !state;
+  }
+};
+
+// функция, переключающая состояние формы
+var toggleForm = function (state) {
+  document.querySelector('.ad-form').classList.toggle('ad-form--disabled', !state);
+};
+
 // cлучайное число диапазона
 var getRandomInteger = function (min, max) {
   var rand = min + Math.random() * (max + 1 - min);
@@ -163,6 +189,34 @@ var getMockOffers = function (size) {
 
   return offers;
 };
+
+// функция, которая переключает состояние страницы
+var togglePage = function (state) {
+  toggleMap(state);
+  toggleFieldset(state);
+  toggleFilters(state);
+  toggleForm(state);
+};
+
+// обработчик события для пина на карте, при нажатии мышкой
+var onPinMousedown = function (e) {
+  e.preventDefault();
+  togglePage(true);
+};
+
+// обработчик события для пина на карте, при нажатии клавиши ENTER
+var onPinKeydown = function (e) {
+  e.preventDefault();
+
+  if (e.keyCode === 13) {
+    togglePage(true);
+  }
+};
+
+var pinElement = document.querySelector('.map__pin--main');
+
+pinElement.addEventListener('mousedown', onPinMousedown);
+pinElement.addEventListener('keydown', onPinKeydown);
 
 var offers = getMockOffers(PIN_NUMBER);
 renderMapPins(offers);
