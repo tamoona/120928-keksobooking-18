@@ -13,6 +13,21 @@ var CHECKIN_CHECKOUT_TIME = ['12:00', '13:00', '14:00'];
 var PIN_NUMBER = 8;
 var PIN_WIDTH = 40;
 
+// функция, добавляющая значение в поле
+var setFieldValue = function (fieldElement, value) {
+  fieldElement.value = value;
+};
+
+// функция, формирующая адрес
+var getAddress = function (coordinates) {
+  return Math.round(coordinates.left + coordinates.width) + ', ' + Math.round(coordinates.top + coordinates.height);
+};
+
+// функция, которая возвращает координаты X и Y
+var getCoordinates = function (element) {
+  return element.getBoundingClientRect();
+};
+
 // функция, переключающая состояние карты
 var toggleMap = function (state) {
   document.querySelector('.map').classList.toggle('map--faded', !state);
@@ -202,6 +217,8 @@ var togglePage = function (state) {
 var onPinMousedown = function (e) {
   e.preventDefault();
   togglePage(true);
+  var coordinates = getCoordinates(document.querySelector('.map__pin--main'));
+  setFieldValue(document.querySelector('#address'), getAddress(coordinates));
 };
 
 // обработчик события для пина на карте, при нажатии клавиши ENTER
@@ -220,4 +237,4 @@ pinElement.addEventListener('keydown', onPinKeydown);
 
 var offers = getMockOffers(PIN_NUMBER);
 renderMapPins(offers);
-renderCard(offers[0]);
+// renderCard(offers[0]);
