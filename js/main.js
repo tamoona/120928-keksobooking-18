@@ -28,6 +28,11 @@ var getCoordinates = function (element) {
   return element.getBoundingClientRect();
 };
 
+// функция, возвращающая значение выбранной опции у списка
+var getSelectedValue = function (element) {
+  return element.options[element.selectedIndex].value;
+};
+
 // функция, переключающая состояние карты
 var toggleMap = function (state) {
   document.querySelector('.map').classList.toggle('map--faded', !state);
@@ -58,6 +63,24 @@ var toggleForm = function (state) {
 var getRandomInteger = function (min, max) {
   var rand = min + Math.random() * (max + 1 - min);
   return Math.floor(rand);
+};
+
+// функция, проверяющая на валидность количество гостей по отношению к количеству комнат
+var validateRoomsVsGuests = function () {
+  var roomField = document.querySelector('#room_number');
+  var guestField = document.querySelector('#capacity');
+  var roomNumber = +getSelectedValue(roomField);
+  var guestNumber = +getSelectedValue(guestField);
+
+  if (guestNumber <= roomNumber) {
+    if (guestNumber === 0 && roomNumber !== 100 || roomNumber === 100 && guestNumber !== 0) {
+      guestField.setCustomValidity('Выбранное количество комнат подходит только не для гостей');
+    } else {
+      guestField.setCustomValidity('');
+    }
+  } else {
+    guestField.setCustomValidity('Количество гостей не должно превышать количество комнат');
+  }
 };
 
 // генерация массива случайной длины на основе массива
@@ -234,7 +257,11 @@ var pinElement = document.querySelector('.map__pin--main');
 
 pinElement.addEventListener('mousedown', onPinMousedown);
 pinElement.addEventListener('keydown', onPinKeydown);
+document.querySelector('#room_number').addEventListener('change', validateRoomsVsGuests);
+document.querySelector('#capacity').addEventListener('change', validateRoomsVsGuests);
+
+validateRoomsVsGuests();
 
 var offers = getMockOffers(PIN_NUMBER);
 renderMapPins(offers);
-// renderCard(offers[0]);
+renderCard(offers[0]);
