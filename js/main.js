@@ -36,6 +36,21 @@ var getSelectedValue = function (element) {
 // функция, переключающая состояние карты
 var toggleMap = function (state) {
   document.querySelector('.map').classList.toggle('map--faded', !state);
+  if (state) {
+    var offers = getMockOffers(PIN_NUMBER);
+    renderMapPins(offers);
+    renderCard(offers[0]);
+  } else {
+    removeElements(document.querySelectorAll('.map__pin:not(.map__pin--main)'));
+    removeElements(document.querySelectorAll('.map__card'));
+  }
+};
+
+// функция, удаляюшая елементы
+var removeElements = function (nodeList) {
+  for (var i = 0; i < nodeList.length; i++) {
+    nodeList[i].parentNode.removeChild(nodeList[i]);
+  }
 };
 
 // функция, переключающая состояния полей
@@ -261,7 +276,3 @@ document.querySelector('#room_number').addEventListener('change', validateRoomsV
 document.querySelector('#capacity').addEventListener('change', validateRoomsVsGuests);
 
 validateRoomsVsGuests();
-
-var offers = getMockOffers(PIN_NUMBER);
-renderMapPins(offers);
-renderCard(offers[0]);
