@@ -89,13 +89,15 @@ var validateRoomsVsGuests = function () {
 
   if (guestNumber <= roomNumber) {
     if (guestNumber === 0 && roomNumber !== 100 || roomNumber === 100 && guestNumber !== 0) {
-      guestField.setCustomValidity('Выбранное количество комнат подходит только не для гостей');
+      guestField.setCustomValidity('Выбранное количество комнат не подходит для гостей');
     } else {
       guestField.setCustomValidity('');
     }
   } else {
     guestField.setCustomValidity('Количество гостей не должно превышать количество комнат');
   }
+
+  guestField.reportValidity();
 };
 
 // генерация массива случайной длины на основе массива
