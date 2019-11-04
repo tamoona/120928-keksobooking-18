@@ -69,8 +69,8 @@ var getRandomInteger = function (min, max) {
 var validateRoomsVsGuests = function () {
   var roomField = document.querySelector('#room_number');
   var guestField = document.querySelector('#capacity');
-  var roomNumber = +getSelectedValue(roomField);
-  var guestNumber = +getSelectedValue(guestField);
+  var roomNumber = parseInt(getSelectedValue(roomField), 10);
+  var guestNumber = parseInt(getSelectedValue(guestField), 10);
 
   if (guestNumber <= roomNumber) {
     if (guestNumber === 0 && roomNumber !== 100 || roomNumber === 100 && guestNumber !== 0) {
