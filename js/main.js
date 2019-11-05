@@ -80,24 +80,56 @@ var getRandomInteger = function (min, max) {
   return Math.floor(rand);
 };
 
-// функция, проверяющая на валидность количество гостей по отношению к количеству комнат
-var validateRoomsVsGuests = function () {
-  var roomField = document.querySelector('#room_number');
-  var guestField = document.querySelector('#capacity');
-  var roomNumber = parseInt(getSelectedValue(roomField), 10);
-  var guestNumber = parseInt(getSelectedValue(guestField), 10);
-
-  if (guestNumber <= roomNumber) {
-    if (guestNumber === 0 && roomNumber !== 100 || roomNumber === 100 && guestNumber !== 0) {
-      guestField.setCustomValidity('Выбранное количество комнат не подходит для гостей');
-    } else {
-      guestField.setCustomValidity('');
+var isGuestNumberValid = function (roomNumber, guestNumber) {
+  if (roomNumber >= guestNumber) {
+    if (roomNumber === 100 && guestNumber !== 0 || roomNumber !== 100 && guestNumber === 0) {
+      return false;
     }
+    return true;
   } else {
-    guestField.setCustomValidity('Количество гостей не должно превышать количество комнат');
+    return false;
+  }
+};
+
+// функция, деактивирующая невалидное количество гостей
+var disableInvalidGuestValues = function () {
+  var roomField = document.querySelector('#room_number');
+  var roomNumber = parseInt(getSelectedValue(roomField), 10);
+  var guestSelectOptions = document.querySelectorAll('#capacity option');
+
+  for (var i = 0; i < guestSelectOptions.length; i++) {
+    var guestSelectOption = guestSelectOptions[i];
+    var guestSelectValue = parseInt(guestSelectOption.value, 10);
+    guestSelectOption.disabled = !isGuestNumberValid(roomNumber, guestSelectValue);
   }
 
-  guestField.reportValidity();
+  setValidGuestValue();
+};
+
+// функция, которая возвращает корректное количество гостей в зависимости с количеством комнат
+var getValidGuestNumber = function (roomNumber, guestNumber) {
+  if (roomNumber === 100) {
+    return 0;
+  } else if (roomNumber > 0 && guestNumber === 0 || guestNumber > roomNumber) {
+    return roomNumber;
+  } else {
+    return guestNumber;
+  }
+};
+
+// функция, которая задаёт значение select
+var setSelectValue = function (element, value) {
+  element.value = value;
+};
+
+// функция, устанавливающая значение по умолчанию
+var setValidGuestValue = function () {
+  var roomField = document.querySelector('#room_number');
+  var guestField = document.querySelector('#capacity');
+  var selectedRoomTotal = parseInt(getSelectedValue(roomField), 10);
+  var selectedGuestTotal = parseInt(getSelectedValue(guestField), 10);
+  var guestTotal = getValidGuestNumber(selectedRoomTotal, selectedGuestTotal);
+  setSelectValue(document.querySelector('#capacity'), guestTotal);
 };
 
 // генерация массива случайной длины на основе массива
@@ -257,6 +289,7 @@ var togglePage = function (state) {
 var onPinMousedown = function (e) {
   e.preventDefault();
   togglePage(true);
+  disableInvalidGuestValues();
   var coordinates = getCoordinates(document.querySelector('.map__pin--main'));
   setFieldValue(document.querySelector('#address'), getAddress(coordinates));
 };
@@ -267,6 +300,9 @@ var onPinKeydown = function (e) {
 
   if (e.keyCode === 13) {
     togglePage(true);
+    disableInvalidGuestValues();
+    var coordinates = getCoordinates(document.querySelector('.map__pin--main'));
+    setFieldValue(document.querySelector('#address'), getAddress(coordinates));
   }
 };
 
@@ -274,7 +310,7 @@ var pinElement = document.querySelector('.map__pin--main');
 
 pinElement.addEventListener('mousedown', onPinMousedown);
 pinElement.addEventListener('keydown', onPinKeydown);
-document.querySelector('#room_number').addEventListener('change', validateRoomsVsGuests);
-document.querySelector('#capacity').addEventListener('change', validateRoomsVsGuests);
+document.querySelector('#room_number').addEventListener('change', disableInvalidGuestValues);
+document.querySelector('#capacity').addEventListener('change', disableInvalidGuestValues);
 
-validateRoomsVsGuests();
+setValidGuestValue();
