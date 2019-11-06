@@ -13,10 +13,123 @@ var CHECKIN_CHECKOUT_TIME = ['12:00', '13:00', '14:00'];
 var PIN_NUMBER = 8;
 var PIN_WIDTH = 40;
 
+// функция, добавляющая значение в поле
+var setFieldValue = function (fieldElement, value) {
+  fieldElement.value = value;
+};
+
+// функция, формирующая адрес
+var getAddress = function (coordinates) {
+  return Math.round(coordinates.left + coordinates.width) + ', ' + Math.round(coordinates.top + coordinates.height);
+};
+
+// функция, которая возвращает координаты X и Y
+var getCoordinates = function (element) {
+  return element.getBoundingClientRect();
+};
+
+// функция, возвращающая значение выбранной опции у списка
+var getSelectedValue = function (element) {
+  return element.options[element.selectedIndex].value;
+};
+
+// функция, переключающая состояние карты
+var toggleMap = function (state) {
+  document.querySelector('.map').classList.toggle('map--faded', !state);
+  if (state) {
+    var offers = getMockOffers(PIN_NUMBER);
+    renderMapPins(offers);
+    renderCard(offers[0]);
+  } else {
+    removeElements(document.querySelectorAll('.map__pin:not(.map__pin--main)'));
+    removeElements(document.querySelectorAll('.map__card'));
+  }
+};
+
+// функция, удаляюшая елементы
+var removeElements = function (nodeList) {
+  for (var i = 0; i < nodeList.length; i++) {
+    nodeList[i].parentNode.removeChild(nodeList[i]);
+  }
+};
+
+// функция, переключающая состояния полей
+var toggleFieldset = function (state) {
+  var fieldsetElements = document.querySelectorAll('.ad-form fieldset');
+  for (var i = 0; i < fieldsetElements.length; i++) {
+    fieldsetElements[i].disabled = !state;
+  }
+};
+
+// функция, переключающая активное состояние формы с фильтрами
+var toggleFilters = function (state) {
+  var filtersElements = document.querySelectorAll('.map__filters select, .map__filters fieldset');
+  for (var i = 0; i < filtersElements.length; i++) {
+    filtersElements[i].disabled = !state;
+  }
+};
+
+// функция, переключающая состояние формы
+var toggleForm = function (state) {
+  document.querySelector('.ad-form').classList.toggle('ad-form--disabled', !state);
+};
+
 // cлучайное число диапазона
 var getRandomInteger = function (min, max) {
   var rand = min + Math.random() * (max + 1 - min);
   return Math.floor(rand);
+};
+
+var isGuestNumberValid = function (roomNumber, guestNumber) {
+  if (roomNumber >= guestNumber) {
+    if (roomNumber === 100 && guestNumber !== 0 || roomNumber !== 100 && guestNumber === 0) {
+      return false;
+    }
+    return true;
+  } else {
+    return false;
+  }
+};
+
+// функция, деактивирующая невалидное количество гостей
+var disableInvalidGuestValues = function () {
+  var roomField = document.querySelector('#room_number');
+  var roomNumber = parseInt(getSelectedValue(roomField), 10);
+  var guestSelectOptions = document.querySelectorAll('#capacity option');
+
+  for (var i = 0; i < guestSelectOptions.length; i++) {
+    var guestSelectOption = guestSelectOptions[i];
+    var guestSelectValue = parseInt(guestSelectOption.value, 10);
+    guestSelectOption.disabled = !isGuestNumberValid(roomNumber, guestSelectValue);
+  }
+
+  setValidGuestValue();
+};
+
+// функция, которая возвращает корректное количество гостей в зависимости с количеством комнат
+var getValidGuestNumber = function (roomNumber, guestNumber) {
+  if (roomNumber === 100) {
+    return 0;
+  } else if (roomNumber > 0 && guestNumber === 0 || guestNumber > roomNumber) {
+    return roomNumber;
+  } else {
+    return guestNumber;
+  }
+};
+
+// функция, которая задаёт значение select
+var setSelectValue = function (element, value) {
+  element.value = value;
+};
+
+// функция, устанавливающая значение по умолчанию
+var setValidGuestValue = function () {
+  var roomField = document.querySelector('#room_number');
+  var guestField = document.querySelector('#capacity');
+  var selectedRoomTotal = parseInt(getSelectedValue(roomField), 10);
+  var selectedGuestTotal = parseInt(getSelectedValue(guestField), 10);
+  var guestTotal = getValidGuestNumber(selectedRoomTotal, selectedGuestTotal);
+  setSelectValue(document.querySelector('#capacity'), guestTotal);
 };
 
 // генерация массива случайной длины на основе массива
@@ -164,6 +277,40 @@ var getMockOffers = function (size) {
   return offers;
 };
 
-var offers = getMockOffers(PIN_NUMBER);
-renderMapPins(offers);
-renderCard(offers[0]);
+// функция, которая переключает состояние страницы
+var togglePage = function (state) {
+  toggleMap(state);
+  toggleFieldset(state);
+  toggleFilters(state);
+  toggleForm(state);
+};
+
+// обработчик события для пина на карте, при нажатии мышкой
+var onPinMousedown = function (e) {
+  e.preventDefault();
+  togglePage(true);
+  disableInvalidGuestValues();
+  var coordinates = getCoordinates(document.querySelector('.map__pin--main'));
+  setFieldValue(document.querySelector('#address'), getAddress(coordinates));
+};
+
+// обработчик события для пина на карте, при нажатии клавиши ENTER
+var onPinKeydown = function (e) {
+  e.preventDefault();
+
+  if (e.keyCode === 13) {
+    togglePage(true);
+    disableInvalidGuestValues();
+    var coordinates = getCoordinates(document.querySelector('.map__pin--main'));
+    setFieldValue(document.querySelector('#address'), getAddress(coordinates));
+  }
+};
+
+var pinElement = document.querySelector('.map__pin--main');
+
+pinElement.addEventListener('mousedown', onPinMousedown);
+pinElement.addEventListener('keydown', onPinKeydown);
+document.querySelector('#room_number').addEventListener('change', disableInvalidGuestValues);
+document.querySelector('#capacity').addEventListener('change', disableInvalidGuestValues);
+
+setValidGuestValue();
