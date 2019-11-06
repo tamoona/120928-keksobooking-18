@@ -33,6 +33,18 @@ var getSelectedValue = function (element) {
   return element.options[element.selectedIndex].value;
 };
 
+// вспомогательная функция для перерисовки карты на основе переданных данных
+var openNewCard = function (data) {
+  removeElements(document.querySelectorAll('.map .map__card'));
+  renderCard(data);
+  var popup = document.querySelector('.map__card');
+  var closePopupButton = popup.querySelector('.popup__close');
+
+  closePopupButton.addEventListener('click', function () {
+    removeElements(document.querySelectorAll('.map .map__card'));
+  });
+};
+
 // функция, переключающая состояние карты
 var toggleMap = function (state) {
   document.querySelector('.map').classList.toggle('map--faded', !state);
@@ -46,15 +58,16 @@ var toggleMap = function (state) {
       var pin = e.target.parentNode;
 
       if (pin.classList.contains('map__pin') && !pin.classList.contains('map__pin--main')) {
-        removeElements(document.querySelectorAll('.map .map__card'));
-        renderCard(pinData[pin.dataset.id]);
+        openNewCard(pinData[pin.dataset.id]);
+      }
+    };
 
-        // обработчик для закрытия карточки с подробной информацией по нажатию иконки закрытия
-        var popup = document.querySelector('.map__card');
-        var closePopupButton = popup.querySelector('.popup__close');
-        closePopupButton.addEventListener('click', function () {
-          removeElements(document.querySelectorAll('.map .map__card'));
-        });
+    // обработчик открытия карточки объявления с клавиатуры, карточка объявления для выбранного пина открывается при нажатии на клавишу Enter
+    var onPinKeydown = function (e) {
+      var pin = e.target;
+
+      if (e.keyCode === 13 && pin.classList.contains('map__pin') && !pin.classList.contains('map__pin--main')) {
+        openNewCard(pinData[pin.dataset.id]);
       }
     };
 
@@ -62,6 +75,7 @@ var toggleMap = function (state) {
     renderMapPins(pinData);
 
     document.querySelector('.map__pins').addEventListener('click', onPinClick);
+    document.querySelector('.map__pins').addEventListener('keydown', onPinKeydown);
   } else {
     removeElements(document.querySelectorAll('.map__pin:not(.map__pin--main)'));
     removeElements(document.querySelectorAll('.map__card'));
@@ -319,9 +333,7 @@ var onPinMousedown = function (e) {
 };
 
 // обработчик события для пина на карте, при нажатии клавиши ENTER
-var onPinKeydown = function (e) {
-  e.preventDefault();
-
+var onMainPinKeydown = function (e) {
   if (e.keyCode === 13) {
     togglePage(true);
     disableInvalidGuestValues();
@@ -332,8 +344,6 @@ var onPinKeydown = function (e) {
 
 // обработчик закрытия карточки с подробной информацией по нажатию клавиши Esc
 var closePopupButtonEsc = function (e) {
-  e.preventDefault();
-
   if (e.keyCode === 27) {
     removeElements(document.querySelectorAll('.map .map__card'));
   }
@@ -343,7 +353,7 @@ var pinElement = document.querySelector('.map__pin--main');
 
 window.addEventListener('keydown', closePopupButtonEsc);
 pinElement.addEventListener('mousedown', onPinMousedown);
-pinElement.addEventListener('keydown', onPinKeydown);
+pinElement.addEventListener('keydown', onMainPinKeydown);
 document.querySelector('#room_number').addEventListener('change', disableInvalidGuestValues);
 document.querySelector('#capacity').addEventListener('change', disableInvalidGuestValues);
 
