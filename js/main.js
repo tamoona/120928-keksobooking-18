@@ -36,10 +36,32 @@ var getSelectedValue = function (element) {
 // функция, переключающая состояние карты
 var toggleMap = function (state) {
   document.querySelector('.map').classList.toggle('map--faded', !state);
+
   if (state) {
-    var offers = getMockOffers(PIN_NUMBER);
-    renderMapPins(offers);
-    renderCard(offers[0]);
+    var pinData = getMockOffers(PIN_NUMBER);
+
+    // обработчик, благодаря которому пользователь может открыть карточку любого доступного объявления
+    var onPinClick = function (e) {
+      e.preventDefault();
+      var pin = e.target.parentNode;
+
+      if (pin.classList.contains('map__pin') && !pin.classList.contains('map__pin--main')) {
+        removeElements(document.querySelectorAll('.map .map__card'));
+        renderCard(pinData[pin.dataset.id]);
+
+        // обработчик для закрытия карточки с подробной информацией по нажатию иконки закрытия
+        var popup = document.querySelector('.map__card');
+        var closePopupButton = popup.querySelector('.popup__close');
+        closePopupButton.addEventListener('click', function () {
+          removeElements(document.querySelectorAll('.map .map__card'));
+        });
+      }
+    };
+
+    removeElements(document.querySelectorAll('.map__pin:not(.map__pin--main)'));
+    renderMapPins(pinData);
+
+    document.querySelector('.map__pins').addEventListener('click', onPinClick);
   } else {
     removeElements(document.querySelectorAll('.map__pin:not(.map__pin--main)'));
     removeElements(document.querySelectorAll('.map__card'));
@@ -80,6 +102,7 @@ var getRandomInteger = function (min, max) {
   return Math.floor(rand);
 };
 
+// функция, которая проверяет валидность количества гостей по отношению к количеству комнат
 var isGuestNumberValid = function (roomNumber, guestNumber) {
   if (roomNumber >= guestNumber) {
     if (roomNumber === 100 && guestNumber !== 0 || roomNumber !== 100 && guestNumber === 0) {
@@ -106,7 +129,7 @@ var disableInvalidGuestValues = function () {
   setValidGuestValue();
 };
 
-// функция, которая возвращает корректное количество гостей в зависимости с количеством комнат
+// функция, которая возвращает корректное количество гостей в соотношении с количеством комнат
 var getValidGuestNumber = function (roomNumber, guestNumber) {
   if (roomNumber === 100) {
     return 0;
@@ -165,10 +188,11 @@ var getOfferLocation = function () {
 };
 
 // заполнить пин данными
-var updateMapPin = function (mapPin, data) {
+var updateMapPin = function (mapPin, data, index) {
   var pinElement = mapPin.querySelector('.map__pin');
   pinElement.style.left = data.location.x + 'px';
   pinElement.style.top = data.location.y + 'px';
+  pinElement.dataset.id = index;
   var imgElement = pinElement.querySelector('img');
   imgElement.src = data.author.avatar;
   imgElement.alt = data.offer.title;
@@ -183,7 +207,7 @@ var renderMapPins = function (offers) {
     .content;
 
   for (var i = 0; i < offers.length; i++) {
-    var pinElement = updateMapPin(pinTemplate.cloneNode(true), offers[i]);
+    var pinElement = updateMapPin(pinTemplate.cloneNode(true), offers[i], i);
     fragment.appendChild(pinElement);
   }
 
@@ -306,8 +330,18 @@ var onPinKeydown = function (e) {
   }
 };
 
+// обработчик закрытия карточки с подробной информацией по нажатию клавиши Esc
+var closePopupButtonEsc = function (e) {
+  e.preventDefault();
+
+  if (e.keyCode === 27) {
+    removeElements(document.querySelectorAll('.map .map__card'));
+  }
+};
+
 var pinElement = document.querySelector('.map__pin--main');
 
+window.addEventListener('keydown', closePopupButtonEsc);
 pinElement.addEventListener('mousedown', onPinMousedown);
 pinElement.addEventListener('keydown', onPinKeydown);
 document.querySelector('#room_number').addEventListener('change', disableInvalidGuestValues);
