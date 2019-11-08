@@ -33,13 +33,49 @@ var getSelectedValue = function (element) {
   return element.options[element.selectedIndex].value;
 };
 
+// вспомогательная функция для перерисовки карты на основе переданных данных
+var openNewCard = function (data) {
+  removeElements(document.querySelectorAll('.map .map__card'));
+  renderCard(data);
+  var popup = document.querySelector('.map__card');
+  var closePopupButton = popup.querySelector('.popup__close');
+
+  closePopupButton.addEventListener('click', function () {
+    removeElements(document.querySelectorAll('.map .map__card'));
+  });
+};
+
 // функция, переключающая состояние карты
 var toggleMap = function (state) {
   document.querySelector('.map').classList.toggle('map--faded', !state);
+
   if (state) {
-    var offers = getMockOffers(PIN_NUMBER);
-    renderMapPins(offers);
-    renderCard(offers[0]);
+    var pinData = getMockOffers(PIN_NUMBER);
+
+    // обработчик, благодаря которому пользователь может открыть карточку любого доступного объявления
+    var onPinClick = function (e) {
+      e.preventDefault();
+      var pin = e.target.parentNode;
+
+      if (pin.classList.contains('map__pin') && !pin.classList.contains('map__pin--main')) {
+        openNewCard(pinData[pin.dataset.id]);
+      }
+    };
+
+    // обработчик открытия карточки объявления с клавиатуры, карточка объявления для выбранного пина открывается при нажатии на клавишу Enter
+    var onPinKeydown = function (e) {
+      var pin = e.target;
+
+      if (e.keyCode === 13 && pin.classList.contains('map__pin') && !pin.classList.contains('map__pin--main')) {
+        openNewCard(pinData[pin.dataset.id]);
+      }
+    };
+
+    removeElements(document.querySelectorAll('.map__pin:not(.map__pin--main)'));
+    renderMapPins(pinData);
+
+    document.querySelector('.map__pins').addEventListener('click', onPinClick);
+    document.querySelector('.map__pins').addEventListener('keydown', onPinKeydown);
   } else {
     removeElements(document.querySelectorAll('.map__pin:not(.map__pin--main)'));
     removeElements(document.querySelectorAll('.map__card'));
@@ -80,6 +116,7 @@ var getRandomInteger = function (min, max) {
   return Math.floor(rand);
 };
 
+// функция, которая проверяет валидность количества гостей по отношению к количеству комнат
 var isGuestNumberValid = function (roomNumber, guestNumber) {
   if (roomNumber >= guestNumber) {
     if (roomNumber === 100 && guestNumber !== 0 || roomNumber !== 100 && guestNumber === 0) {
@@ -106,7 +143,25 @@ var disableInvalidGuestValues = function () {
   setValidGuestValue();
 };
 
-// функция, которая возвращает корректное количество гостей в зависимости с количеством комнат
+// валидация для поля «Заголовок объявления»
+var titleInput = document.querySelector('input[name="title"]');
+var validateTitleInput = function (inputLength) {
+  if (!inputLength || inputLength === 0) {
+    titleInput.setCustomValidity('Обязательное поле');
+  } else if (inputLength < 30) {
+    titleInput.setCustomValidity('Минимальная длина заголовка — 30 символов');
+  } else if (inputLength >= 100) {
+    titleInput.setCustomValidity('Максимальная длина заголовка — 100 символов');
+  } else {
+    titleInput.setCustomValidity('');
+  }
+};
+var onTitleInput = function (e) {
+  validateTitleInput(e.target.value.length);
+};
+titleInput.addEventListener('input', onTitleInput);
+
+// функция, которая возвращает корректное количество гостей в соотношении с количеством комнат
 var getValidGuestNumber = function (roomNumber, guestNumber) {
   if (roomNumber === 100) {
     return 0;
@@ -115,6 +170,43 @@ var getValidGuestNumber = function (roomNumber, guestNumber) {
   } else {
     return guestNumber;
   }
+};
+
+// валидация для полей «Тип жилья» и «Цена за ночь»
+var houseType = document.querySelector('select[name="type"]');
+var priceInput = document.querySelector('input[name="price"]');
+var validatePrice = function () {
+  priceInput.required = true;
+
+  if (houseType.value === 'bungalo') {
+    priceInput.min = 0;
+    priceInput.placeholder = 0;
+  } else if (houseType.value === 'flat') {
+    priceInput.min = 1000;
+    priceInput.placeholder = 1000;
+  } else if (houseType.value === 'house') {
+    priceInput.min = 5000;
+    priceInput.placeholder = 5000;
+  } else if (houseType.value === 'palace') {
+    priceInput.min = 10000;
+    priceInput.placeholder = 10000;
+  }
+};
+houseType.addEventListener('change', validatePrice);
+
+// валидация для полей «Время заезда» и «Время выезда» (синхронизированы)
+var checkInTime = document.querySelector('select[name="timein"]');
+var checkOutTime = document.querySelector('select[name="timeout"]');
+checkInTime.addEventListener('change', function () {
+  checkOutTime.value = checkInTime.value;
+});
+checkOutTime.addEventListener('change', function () {
+  checkInTime.value = checkOutTime.value;
+});
+
+// отключение поля «Адреса»
+var disableAddress = function () {
+  document.querySelector('input[name="address"]').disabled = true;
 };
 
 // функция, которая задаёт значение select
@@ -165,10 +257,11 @@ var getOfferLocation = function () {
 };
 
 // заполнить пин данными
-var updateMapPin = function (mapPin, data) {
+var updateMapPin = function (mapPin, data, index) {
   var pinElement = mapPin.querySelector('.map__pin');
   pinElement.style.left = data.location.x + 'px';
   pinElement.style.top = data.location.y + 'px';
+  pinElement.dataset.id = index;
   var imgElement = pinElement.querySelector('img');
   imgElement.src = data.author.avatar;
   imgElement.alt = data.offer.title;
@@ -183,7 +276,7 @@ var renderMapPins = function (offers) {
     .content;
 
   for (var i = 0; i < offers.length; i++) {
-    var pinElement = updateMapPin(pinTemplate.cloneNode(true), offers[i]);
+    var pinElement = updateMapPin(pinTemplate.cloneNode(true), offers[i], i);
     fragment.appendChild(pinElement);
   }
 
@@ -295,9 +388,7 @@ var onPinMousedown = function (e) {
 };
 
 // обработчик события для пина на карте, при нажатии клавиши ENTER
-var onPinKeydown = function (e) {
-  e.preventDefault();
-
+var onMainPinKeydown = function (e) {
   if (e.keyCode === 13) {
     togglePage(true);
     disableInvalidGuestValues();
@@ -306,11 +397,22 @@ var onPinKeydown = function (e) {
   }
 };
 
+// обработчик закрытия карточки с подробной информацией по нажатию клавиши Esc
+var closePopupButtonEsc = function (e) {
+  if (e.keyCode === 27) {
+    removeElements(document.querySelectorAll('.map .map__card'));
+  }
+};
+
 var pinElement = document.querySelector('.map__pin--main');
 
+window.addEventListener('keydown', closePopupButtonEsc);
 pinElement.addEventListener('mousedown', onPinMousedown);
-pinElement.addEventListener('keydown', onPinKeydown);
+pinElement.addEventListener('keydown', onMainPinKeydown);
 document.querySelector('#room_number').addEventListener('change', disableInvalidGuestValues);
 document.querySelector('#capacity').addEventListener('change', disableInvalidGuestValues);
 
 setValidGuestValue();
+validateTitleInput(titleInput.value.length);
+validatePrice();
+disableAddress();
