@@ -1,6 +1,9 @@
 'use strict';
 
 (function () {
+  var NO_GUESTS_ROOM_NUMBER = 100;
+  var NO_GUESTS_NUMBER = 0;
+
   // отключение поля «Адреса»
   var disableAddress = function () {
     document.querySelector('input[name="address"]').disabled = true;
@@ -27,39 +30,48 @@
   // валидация для полей «Тип жилья» и «Цена за ночь»
   var houseType = document.querySelector('select[name="type"]');
   var validatePrice = function () {
+    var BUNGALO_PRICE = 0;
+    var FLAT_PRICE = 1000;
+    var HOUSE_PRICE = 5000;
+    var PALACE_PRICE = 10000;
+
     var priceInput = document.querySelector('input[name="price"]');
     priceInput.required = true;
 
     if (houseType.value === 'bungalo') {
-      priceInput.min = 0;
-      priceInput.placeholder = 0;
+      priceInput.min = BUNGALO_PRICE;
+      priceInput.placeholder = BUNGALO_PRICE;
     } else if (houseType.value === 'flat') {
-      priceInput.min = 1000;
-      priceInput.placeholder = 1000;
+      priceInput.min = FLAT_PRICE;
+      priceInput.placeholder = FLAT_PRICE;
     } else if (houseType.value === 'house') {
-      priceInput.min = 5000;
-      priceInput.placeholder = 5000;
+      priceInput.min = HOUSE_PRICE;
+      priceInput.placeholder = HOUSE_PRICE;
     } else if (houseType.value === 'palace') {
-      priceInput.min = 10000;
-      priceInput.placeholder = 10000;
+      priceInput.min = PALACE_PRICE;
+      priceInput.placeholder = PALACE_PRICE;
     }
   };
   houseType.addEventListener('change', validatePrice);
 
   // валидация для полей «Время заезда» и «Время выезда» (синхронизированы)
-  var checkInTime = document.querySelector('select[name="timein"]');
-  var checkOutTime = document.querySelector('select[name="timeout"]');
-  checkInTime.addEventListener('change', function () {
-    checkOutTime.value = checkInTime.value;
-  });
-  checkOutTime.addEventListener('change', function () {
-    checkInTime.value = checkOutTime.value;
-  });
+  var timeFieldset = document.querySelector('.ad-form__element--time');
+  var toggleTime = function (e) {
+    var checkInTime = document.querySelector('select[name="timein"]');
+    var checkOutTime = document.querySelector('select[name="timeout"]');
+
+    if (e.target === checkInTime) {
+      checkOutTime.value = checkInTime.value;
+    } else {
+      checkInTime.value = checkOutTime.value;
+    }
+  };
+  timeFieldset.addEventListener('change', toggleTime);
 
   // функция, которая проверяет валидность количества гостей по отношению к количеству комнат
   var isGuestNumberValid = function (roomNumber, guestNumber) {
     if (roomNumber >= guestNumber) {
-      if (roomNumber === 100 && guestNumber !== 0 || roomNumber !== 100 && guestNumber === 0) {
+      if (roomNumber === NO_GUESTS_ROOM_NUMBER && guestNumber !== NO_GUESTS_NUMBER || roomNumber !== NO_GUESTS_ROOM_NUMBER && guestNumber === NO_GUESTS_NUMBER) {
         return false;
       }
       return true;
@@ -70,9 +82,9 @@
 
   // функция, которая возвращает корректное количество гостей в соотношении с количеством комнат
   var getValidGuestNumber = function (roomNumber, guestNumber) {
-    if (roomNumber === 100) {
-      return 0;
-    } else if (roomNumber > 0 && guestNumber === 0 || guestNumber > roomNumber) {
+    if (roomNumber === NO_GUESTS_ROOM_NUMBER) {
+      return NO_GUESTS_NUMBER;
+    } else if (roomNumber > NO_GUESTS_NUMBER && guestNumber === NO_GUESTS_NUMBER || guestNumber > roomNumber) {
       return roomNumber;
     } else {
       return guestNumber;
@@ -83,16 +95,16 @@
   var setValidGuestValue = function () {
     var roomField = document.querySelector('#room_number');
     var guestField = document.querySelector('#capacity');
-    var selectedRoomTotal = parseInt(window.getSelectedValue(roomField), 10);
-    var selectedGuestTotal = parseInt(window.getSelectedValue(guestField), 10);
+    var selectedRoomTotal = parseInt(window.utils.getSelectedValue(roomField), 10);
+    var selectedGuestTotal = parseInt(window.utils.getSelectedValue(guestField), 10);
     var guestTotal = getValidGuestNumber(selectedRoomTotal, selectedGuestTotal);
-    window.setSelectValue(document.querySelector('#capacity'), guestTotal);
+    window.utils.setSelectValue(document.querySelector('#capacity'), guestTotal);
   };
 
   // функция, деактивирующая невалидное количество гостей
   var disableInvalidGuestValues = function () {
     var roomField = document.querySelector('#room_number');
-    var roomNumber = parseInt(window.getSelectedValue(roomField), 10);
+    var roomNumber = parseInt(window.utils.getSelectedValue(roomField), 10);
     var guestSelectOptions = document.querySelectorAll('#capacity option');
 
     for (var i = 0; i < guestSelectOptions.length; i++) {

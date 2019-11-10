@@ -29,14 +29,14 @@
         }
       };
 
-      window.removeElements(document.querySelectorAll('.map__pin:not(.map__pin--main)'));
+      window.utils.removeElements(document.querySelectorAll('.map__pin:not(.map__pin--main)'));
       window.renderMapPins(pinData);
 
       document.querySelector('.map__pins').addEventListener('click', onPinClick);
       document.querySelector('.map__pins').addEventListener('keydown', onPinKeydown);
     } else {
-      window.removeElements(document.querySelectorAll('.map__pin:not(.map__pin--main)'));
-      window.removeElements(document.querySelectorAll('.map__card'));
+      window.utils.removeElements(document.querySelectorAll('.map__pin:not(.map__pin--main)'));
+      window.utils.removeElements(document.querySelectorAll('.map__card'));
     }
   };
 })();

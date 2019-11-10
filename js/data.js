@@ -21,8 +21,8 @@
   // генерация локации предложения
   var getOfferLocation = function () {
     return {
-      x: window.getRandomInteger(PIN_WIDTH, 1000),
-      y: window.getRandomInteger(COORDINATES_Y_MIN, COORDINATES_Y_MAX)
+      x: window.utils.getRandomInteger(PIN_WIDTH, 1000),
+      y: window.utils.getRandomInteger(COORDINATES_Y_MIN, COORDINATES_Y_MAX)
     };
   };
 
@@ -40,15 +40,15 @@
         offer: {
           title: 'Уютное гнездышко для молодоженов',
           address: location.x + ', ' + location.y,
-          price: window.getRandomInteger(1000, 10000),
-          type: window.getRandomValueFromArray(TYPES),
-          rooms: window.getRandomInteger(1, 5),
-          guests: window.getRandomInteger(1, 5),
-          checkin: window.getRandomValueFromArray(CHECKIN_CHECKOUT_TIME),
-          checkout: window.getRandomValueFromArray(CHECKIN_CHECKOUT_TIME),
-          features: window.getRandomArrayFromArray(FEATURES),
+          price: window.utils.getRandomInteger(1000, 10000),
+          type: window.utils.getRandomValueFromArray(TYPES),
+          rooms: window.utils.getRandomInteger(1, 5),
+          guests: window.utils.getRandomInteger(1, 5),
+          checkin: window.utils.getRandomValueFromArray(CHECKIN_CHECKOUT_TIME),
+          checkout: window.utils.getRandomValueFromArray(CHECKIN_CHECKOUT_TIME),
+          features: window.utils.getRandomArrayFromArray(FEATURES),
           description: 'Великолепная квартира-студия в центре Токио. Подходит как туристам, так и бизнесменам. Квартира полностью укомплектована и недавно отремонтирована.',
-          photos: window.getRandomArrayFromArray(PHOTOS_OBJECT)
+          photos: window.utils.getRandomArrayFromArray(PHOTOS_OBJECT)
         },
         location: location
       });

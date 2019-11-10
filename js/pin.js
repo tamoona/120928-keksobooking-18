@@ -51,15 +51,16 @@
     e.preventDefault();
     togglePage(true);
     var coordinates = getCoordinates(document.querySelector('.map__pin--main'));
-    window.setFieldValue(document.querySelector('#address'), getAddress(coordinates));
+    window.utils.setFieldValue(document.querySelector('#address'), getAddress(coordinates));
   };
 
   // обработчик события для пина на карте, при нажатии клавиши ENTER
   var onMainPinKeydown = function (e) {
-    if (e.keyCode === 13) {
+    var ENTER_KEY_NUMBER = 13;
+    if (e.keyCode === ENTER_KEY_NUMBER) {
       togglePage(true);
       var coordinates = getCoordinates(document.querySelector('.map__pin--main'));
-      window.setFieldValue(document.querySelector('#address'), getAddress(coordinates));
+      window.utils.setFieldValue(document.querySelector('#address'), getAddress(coordinates));
     }
   };
 

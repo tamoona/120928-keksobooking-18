@@ -3,8 +3,9 @@
 (function () {
   // обработчик закрытия карточки с подробной информацией по нажатию клавиши Esc
   var closePopupButtonEsc = function (e) {
-    if (e.keyCode === 27) {
-      window.removeElements(document.querySelectorAll('.map .map__card'));
+    var ESC_KEY_NUMBER = 27;
+    if (e.keyCode === ESC_KEY_NUMBER) {
+      window.utils.removeElements(document.querySelectorAll('.map .map__card'));
     }
   };
 
@@ -29,11 +30,11 @@
   // генерирует франмент документа, содержащий фотографии
   var generateOfferPhotos = function (photoTemplate, photos) {
     var fragment = document.createDocumentFragment();
-    for (var i = 0; i < photos.length; i++) {
+    photos.forEach(function (photo) {
       var photoElementCopy = photoTemplate.cloneNode(true);
-      photoElementCopy.src = photos[i];
+      photoElementCopy.src = photo;
       fragment.appendChild(photoElementCopy);
-    }
+    });
     return fragment;
   };
 
@@ -68,13 +69,13 @@
 
   // вспомогательная функция для перерисовки карты на основе переданных данных
   window.openNewCard = function (data) {
-    window.removeElements(document.querySelectorAll('.map .map__card'));
+    window.utils.removeElements(document.querySelectorAll('.map .map__card'));
     renderCard(data);
     var popup = document.querySelector('.map__card');
     var closePopupButton = popup.querySelector('.popup__close');
 
     closePopupButton.addEventListener('click', function () {
-      window.removeElements(document.querySelectorAll('.map .map__card'));
+      window.utils.removeElements(document.querySelectorAll('.map .map__card'));
     });
   };
 })();
