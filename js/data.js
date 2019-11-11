@@ -27,10 +27,10 @@
   };
 
   // генерация моков предложения
-  window.getMockOffers = function (size) {
+  window.getMockOffers = function (count) {
     var offers = [];
 
-    for (var i = 0; i < size; i++) {
+    for (var i = 0; i < count; i++) {
       var location = getOfferLocation();
 
       offers.push({

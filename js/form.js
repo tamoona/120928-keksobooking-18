@@ -3,6 +3,12 @@
 (function () {
   var NO_GUESTS_ROOM_NUMBER = 100;
   var NO_GUESTS_NUMBER = 0;
+  var MIN_TITLE_CHAR = 30;
+  var MAX_TITLE_CHAR = 100;
+  var BUNGALO_PRICE = 0;
+  var FLAT_PRICE = 1000;
+  var HOUSE_PRICE = 5000;
+  var PALACE_PRICE = 10000;
 
   // отключение поля «Адреса»
   var disableAddress = function () {
@@ -14,9 +20,9 @@
   var validateTitleInput = function (inputLength) {
     if (!inputLength || inputLength === 0) {
       titleInput.setCustomValidity('Обязательное поле');
-    } else if (inputLength < 30) {
+    } else if (inputLength < MIN_TITLE_CHAR) {
       titleInput.setCustomValidity('Минимальная длина заголовка — 30 символов');
-    } else if (inputLength >= 100) {
+    } else if (inputLength >= MAX_TITLE_CHAR) {
       titleInput.setCustomValidity('Максимальная длина заголовка — 100 символов');
     } else {
       titleInput.setCustomValidity('');
@@ -30,10 +36,6 @@
   // валидация для полей «Тип жилья» и «Цена за ночь»
   var houseType = document.querySelector('select[name="type"]');
   var validatePrice = function () {
-    var BUNGALO_PRICE = 0;
-    var FLAT_PRICE = 1000;
-    var HOUSE_PRICE = 5000;
-    var PALACE_PRICE = 10000;
 
     var priceInput = document.querySelector('input[name="price"]');
     priceInput.required = true;

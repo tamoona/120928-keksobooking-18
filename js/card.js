@@ -1,9 +1,9 @@
 'use strict';
 
 (function () {
+  var ESC_KEY_NUMBER = 27;
   // обработчик закрытия карточки с подробной информацией по нажатию клавиши Esc
   var closePopupButtonEsc = function (e) {
-    var ESC_KEY_NUMBER = 27;
     if (e.keyCode === ESC_KEY_NUMBER) {
       window.utils.removeElements(document.querySelectorAll('.map .map__card'));
     }
@@ -39,8 +39,8 @@
   };
 
   // заполнить окно с информацией об объявлении
-  var updateCard = function (mapCard, data) {
-    var cardElement = mapCard.querySelector('.map__card');
+  var updateCard = function (card, data) {
+    var cardElement = card.querySelector('.map__card');
     var photoTemplate = cardElement.querySelector('.popup__photo');
     var photoSectionElement = cardElement.querySelector('.popup__photos');
 
