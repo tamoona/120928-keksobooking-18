@@ -3,8 +3,8 @@
 (function () {
   var TYPES = ['palace', 'flat', 'house', 'bungalo'];
   var FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
-  var COORDINATES_Y_MIN = 130;
-  var COORDINATES_Y_MAX = 630;
+  window.COORDINATES_Y_MIN = 130;
+  window.COORDINATES_Y_MAX = 630;
   var PHOTOS_OBJECT = [
     'http://o0.github.io/assets/images/tokyo/hotel1.jpg',
     'http://o0.github.io/assets/images/tokyo/hotel2.jpg',
@@ -22,7 +22,7 @@
   var getOfferLocation = function () {
     return {
       x: window.utils.getRandomInteger(PIN_WIDTH, 1000),
-      y: window.utils.getRandomInteger(COORDINATES_Y_MIN, COORDINATES_Y_MAX)
+      y: window.utils.getRandomInteger(window.COORDINATES_Y_MIN, window.COORDINATES_Y_MAX)
     };
   };
 
