@@ -1,15 +1,18 @@
 'use strict';
 
 (function () {
-  var PIN_NUMBER = 8;
 
   // функция, переключающая состояние карты
   window.toggleMap = function (state) {
     document.querySelector('.map').classList.toggle('map--faded', !state);
 
-    if (state) {
-      var pinData = window.getMockOffers(PIN_NUMBER);
+    if (!state) {
+      window.utils.removeElements(document.querySelectorAll('.map__pin:not(.map__pin--main)'));
+      window.utils.removeElements(document.querySelectorAll('.map__card'));
+      return;
+    }
 
+    var onSuccess = function (pinData) {
       // обработчик, благодаря которому пользователь может открыть карточку любого доступного объявления
       var onPinClick = function (e) {
         e.preventDefault();
@@ -34,9 +37,12 @@
 
       document.querySelector('.map__pins').addEventListener('click', onPinClick);
       document.querySelector('.map__pins').addEventListener('keydown', onPinKeydown);
-    } else {
-      window.utils.removeElements(document.querySelectorAll('.map__pin:not(.map__pin--main)'));
-      window.utils.removeElements(document.querySelectorAll('.map__card'));
-    }
+    };
+
+    var onError = function () {
+      window.openErrorModal(window.closeErrorModal);
+    };
+
+    window.request('GET', 'https://js.dump.academy/keksobooking/data', onSuccess, onError);
   };
 })();

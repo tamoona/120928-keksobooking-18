@@ -37,14 +37,6 @@
     listElement.appendChild(fragment);
   };
 
-  // функция, которая переключает состояние страницы
-  var togglePage = function (state) {
-    window.toggleMap(state);
-    window.toggleFieldset(state);
-    window.toggleFilters(state);
-    window.toggleForm(state);
-  };
-
   // обработчик события для пина на карте, при нажатии мышкой
   var onPinMousedown = function (e) {
     e.preventDefault();
@@ -97,7 +89,7 @@
     document.addEventListener('mouseup', onMouseUp);
 
     if (!mapActivated) {
-      togglePage(true);
+      window.utils.togglePage(true);
       mapActivated = true;
     }
 
@@ -108,7 +100,7 @@
   var onMainPinKeydown = function (e) {
     var ENTER_KEY_NUMBER = 13;
     if (e.keyCode === ENTER_KEY_NUMBER && !mapActivated) {
-      togglePage(true);
+      window.utils.togglePage(true);
       mapActivated = true;
       var coordinates = document.querySelector('.map__pin--main').getBoundingClientRect();
       window.utils.setFieldValue(document.querySelector('#address'), getAddress(coordinates.x, coordinates.y));
