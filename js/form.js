@@ -9,10 +9,11 @@
   var FLAT_PRICE = 1000;
   var HOUSE_PRICE = 5000;
   var PALACE_PRICE = 10000;
+  var form = document.querySelector('.ad-form');
 
   // отключение поля «Адреса»
   var disableAddress = function () {
-    document.querySelector('input[name="address"]').disabled = true;
+    document.querySelector('input[name="address"]').readOnly = true;
   };
 
   // валидация для поля «Заголовок объявления»
@@ -118,6 +119,33 @@
     setValidGuestValue();
   };
 
+  // функция, переключающая состояние формы
+  window.resetForm = function () {
+    form.reset();
+    disableInvalidGuestValues();
+  };
+
+  // функция, переключающая состояние формы
+  window.toggleForm = function (state) {
+    form.classList.toggle('ad-form--disabled', !state);
+    window.resetForm();
+  };
+
+  // обработчик события, отменяюший действия формы по умолчанию
+  var onFormSubmit = function (e) {
+    e.preventDefault();
+    var formData = new FormData(e.target);
+    var onSuccess = function () {
+      window.resetForm();
+      window.toggleMap(false);
+      window.openSuccessModal();
+    };
+    var onError = function () {
+      window.openErrorModal(window.closeErrorModal);
+    };
+    window.sendFormData(formData, onSuccess, onError);
+  };
+
   // функция, переключающая активное состояние формы с фильтрами
   window.toggleFilters = function (state) {
     var filtersElements = document.querySelectorAll('.map__filters select, .map__filters fieldset');
@@ -125,13 +153,6 @@
       filtersElements[i].disabled = !state;
     }
   };
-
-  // функция, переключающая состояние формы
-  window.toggleForm = function (state) {
-    document.querySelector('.ad-form').classList.toggle('ad-form--disabled', !state);
-    disableInvalidGuestValues();
-  };
-
 
   // функция, переключающая состояния полей
   window.toggleFieldset = function (state) {
@@ -148,4 +169,5 @@
 
   document.querySelector('#room_number').addEventListener('change', disableInvalidGuestValues);
   document.querySelector('#capacity').addEventListener('change', disableInvalidGuestValues);
+  form.addEventListener('submit', onFormSubmit);
 })();

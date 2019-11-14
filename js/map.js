@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  var ENTER_KEY_NUMBER = 13;
 
   // функция, переключающая состояние карты
   window.toggleMap = function (state) {
@@ -10,6 +11,7 @@
     if (!state) {
       window.utils.removeElements(document.querySelectorAll('.map__pin:not(.map__pin--main)'));
       window.utils.removeElements(document.querySelectorAll('.map__card'));
+      window.resetMainPinPosition();
       return;
     }
 
@@ -28,7 +30,7 @@
       var onPinKeydown = function (e) {
         var pin = e.target;
 
-        if (e.keyCode === 13 && pin.classList.contains('map__pin') && !pin.classList.contains('map__pin--main')) {
+        if (e.keyCode === ENTER_KEY_NUMBER && pin.classList.contains('map__pin') && !pin.classList.contains('map__pin--main')) {
           window.openNewCard(pinData[pin.dataset.id]);
         }
       };
