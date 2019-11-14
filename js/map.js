@@ -11,6 +11,7 @@
     if (!state) {
       window.utils.removeElements(document.querySelectorAll('.map__pin:not(.map__pin--main)'));
       window.utils.removeElements(document.querySelectorAll('.map__card'));
+      window.resetMainPinPosition();
       return;
     }
 

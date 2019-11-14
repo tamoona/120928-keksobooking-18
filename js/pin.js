@@ -3,12 +3,27 @@
 (function () {
   var MAIN_PIN_HEIGHT = 70;
   var MAIN_PIN_WIDTH = 70;
-  var mapActivated = false;
   var ENTER_KEY_NUMBER = 13;
+  var MAIN_PIN_START_POSITION = {
+    x: 570,
+    y: 375
+  };
+  var mapActivated = false;
 
   // функция, формирующая адрес
   var getAddress = function (x, y) {
     return Math.round(x + MAIN_PIN_WIDTH / 2) + ', ' + Math.round(y + MAIN_PIN_HEIGHT);
+  };
+
+  // функция, утсанавливающая значение поля "адрес"
+  var setAddressFieldValue = function (x, y) {
+    window.utils.setFieldValue(document.querySelector('#address'), getAddress(x, y));
+  };
+
+  // функция, возвращающая пин в исходное положение
+  window.resetMainPinPosition = function () {
+    window.utils.moveElement(document.querySelector('.map__pin--main'), MAIN_PIN_START_POSITION.x, MAIN_PIN_START_POSITION.y);
+    setAddressFieldValue(MAIN_PIN_START_POSITION.x, MAIN_PIN_START_POSITION.y);
   };
 
   // заполнить пин данными
@@ -66,9 +81,8 @@
       var positionX = pinElement.offsetLeft - shift.x;
 
       if (positionY >= window.COORDINATES_Y_MIN && positionY <= window.COORDINATES_Y_MAX && positionX <= xBoundaries && positionX >= 0) {
-        pinElement.style.top = positionY + 'px';
-        pinElement.style.left = positionX + 'px';
-        window.utils.setFieldValue(document.querySelector('#address'), getAddress(positionX, positionY));
+        window.utils.moveElement(pinElement, positionX, positionY);
+        setAddressFieldValue(positionX, positionY);
       }
     };
 
@@ -94,7 +108,7 @@
       mapActivated = true;
     }
 
-    window.utils.setFieldValue(document.querySelector('#address'), getAddress(startCoords.x, startCoords.y));
+    setAddressFieldValue(startCoords.x, startCoords.y);
   };
 
   // обработчик события для пина на карте, при нажатии клавиши ENTER
@@ -103,7 +117,7 @@
       window.utils.togglePage(true);
       mapActivated = true;
       var coordinates = document.querySelector('.map__pin--main').getBoundingClientRect();
-      window.utils.setFieldValue(document.querySelector('#address'), getAddress(coordinates.x, coordinates.y));
+      setAddressFieldValue(coordinates.x, coordinates.y);
     }
   };
 

@@ -63,6 +63,12 @@
     window.toggleForm(state);
   };
 
+  // функция, изменяющая позиционирование элемента
+  var moveElement = function (element, x, y) {
+    element.style.top = y + 'px';
+    element.style.left = x + 'px';
+  };
+
   window.utils = {
     getRandomInteger: getRandomInteger,
     getRandomArrayFromArray: getRandomArrayFromArray,
@@ -72,6 +78,7 @@
     removeElements: removeElements,
     getSelectedValue: getSelectedValue,
     setSelectValue: setSelectValue,
-    togglePage: togglePage
+    togglePage: togglePage,
+    moveElement: moveElement
   };
 })();
