@@ -31,10 +31,15 @@
     fieldElement.value = value;
   };
 
-  // функция, удаляюшая елементы
+  // функция, удаляюшая элемент
+  var removeElement = function (element) {
+    element.parentNode.removeChild(element);
+  };
+
+  // функция, удаляюшая элементы
   var removeElements = function (nodeList) {
     for (var i = 0; i < nodeList.length; i++) {
-      nodeList[i].parentNode.removeChild(nodeList[i]);
+      removeElement(nodeList[i]);
     }
   };
 
@@ -48,13 +53,23 @@
     element.value = value;
   };
 
+  // функция, которая переключает состояние страницы
+  var togglePage = function (state) {
+    window.toggleMap(state);
+    window.toggleFieldset(state);
+    window.toggleFilters(state);
+    window.toggleForm(state);
+  };
+
   window.utils = {
     getRandomInteger: getRandomInteger,
     getRandomArrayFromArray: getRandomArrayFromArray,
     getRandomValueFromArray: getRandomValueFromArray,
     setFieldValue: setFieldValue,
+    removeElement: removeElement,
     removeElements: removeElements,
     getSelectedValue: getSelectedValue,
-    setSelectValue: setSelectValue
+    setSelectValue: setSelectValue,
+    togglePage: togglePage
   };
 })();

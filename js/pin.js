@@ -4,6 +4,7 @@
   var MAIN_PIN_HEIGHT = 70;
   var MAIN_PIN_WIDTH = 70;
   var mapActivated = false;
+  var ENTER_KEY_NUMBER = 13;
 
   // функция, формирующая адрес
   var getAddress = function (x, y) {
@@ -35,14 +36,6 @@
     }
 
     listElement.appendChild(fragment);
-  };
-
-  // функция, которая переключает состояние страницы
-  var togglePage = function (state) {
-    window.toggleMap(state);
-    window.toggleFieldset(state);
-    window.toggleFilters(state);
-    window.toggleForm(state);
   };
 
   // обработчик события для пина на карте, при нажатии мышкой
@@ -97,7 +90,7 @@
     document.addEventListener('mouseup', onMouseUp);
 
     if (!mapActivated) {
-      togglePage(true);
+      window.utils.togglePage(true);
       mapActivated = true;
     }
 
@@ -106,9 +99,8 @@
 
   // обработчик события для пина на карте, при нажатии клавиши ENTER
   var onMainPinKeydown = function (e) {
-    var ENTER_KEY_NUMBER = 13;
     if (e.keyCode === ENTER_KEY_NUMBER && !mapActivated) {
-      togglePage(true);
+      window.utils.togglePage(true);
       mapActivated = true;
       var coordinates = document.querySelector('.map__pin--main').getBoundingClientRect();
       window.utils.setFieldValue(document.querySelector('#address'), getAddress(coordinates.x, coordinates.y));
