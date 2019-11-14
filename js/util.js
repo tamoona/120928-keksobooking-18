@@ -33,7 +33,9 @@
 
   // функция, удаляюшая элемент
   var removeElement = function (element) {
-    element.parentNode.removeChild(element);
+    if (element) {
+      element.remove();
+    }
   };
 
   // функция, удаляюшая элементы

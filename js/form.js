@@ -12,7 +12,7 @@
 
   // отключение поля «Адреса»
   var disableAddress = function () {
-    document.querySelector('input[name="address"]').disabled = true;
+    document.querySelector('input[name="address"]').readOnly = true;
   };
 
   // валидация для поля «Заголовок объявления»
@@ -118,6 +118,19 @@
     setValidGuestValue();
   };
 
+  // обработчик события, отменяюший действия формы по умолчанию
+  var onFormSubmit = function (e) {
+    e.preventDefault();
+    var formData = new FormData(e.target);
+    var onSuccess = function () {
+      window.openSuccessModal();
+    };
+    var onError = function () {
+      window.openErrorModal(window.closeErrorModal);
+    };
+    window.sendFormData(formData, onSuccess, onError);
+  };
+
   // функция, переключающая активное состояние формы с фильтрами
   window.toggleFilters = function (state) {
     var filtersElements = document.querySelectorAll('.map__filters select, .map__filters fieldset');
@@ -148,4 +161,5 @@
 
   document.querySelector('#room_number').addEventListener('change', disableInvalidGuestValues);
   document.querySelector('#capacity').addEventListener('change', disableInvalidGuestValues);
+  document.querySelector('.ad-form').addEventListener('submit', onFormSubmit);
 })();
