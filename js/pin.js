@@ -4,6 +4,7 @@
   var MAIN_PIN_HEIGHT = 70;
   var MAIN_PIN_WIDTH = 70;
   var mapActivated = false;
+  var ENTER_KEY_NUMBER = 13;
 
   // функция, формирующая адрес
   var getAddress = function (x, y) {
@@ -98,7 +99,6 @@
 
   // обработчик события для пина на карте, при нажатии клавиши ENTER
   var onMainPinKeydown = function (e) {
-    var ENTER_KEY_NUMBER = 13;
     if (e.keyCode === ENTER_KEY_NUMBER && !mapActivated) {
       window.utils.togglePage(true);
       mapActivated = true;

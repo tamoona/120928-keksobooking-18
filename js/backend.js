@@ -1,6 +1,9 @@
 'use strict';
 
 (function () {
+  var SERVER_URL = 'https://js.dump.academy/keksobooking/data';
+  var TIMEOUT = 10000;
+  var RESPONSE_OK = 200;
 
   // выполнение http-запроса
   window.request = function (method, url, onSuccess, onError) {
@@ -8,7 +11,7 @@
 
     xhr.responseType = 'json';
     xhr.addEventListener('load', function () {
-      if (xhr.status === 200) {
+      if (xhr.status === RESPONSE_OK) {
         onSuccess(xhr.response);
       } else {
         onError('Cтатус ответа: ' + xhr.status + ' ' + xhr.statusText);
@@ -23,8 +26,12 @@
       onError('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
     });
 
-    xhr.timeout = 10000;
+    xhr.timeout = TIMEOUT;
     xhr.open(method, url);
     xhr.send();
+  };
+
+  window.loadPinData = function (onSuccess, onError) {
+    window.request('GET', SERVER_URL, onSuccess, onError);
   };
 })();

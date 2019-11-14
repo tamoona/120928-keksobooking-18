@@ -6,6 +6,7 @@
   window.toggleMap = function (state) {
     document.querySelector('.map').classList.toggle('map--faded', !state);
 
+    // ранний возврат из функции для уменьшения количества уровней вложенности при отображении карты и пинов
     if (!state) {
       window.utils.removeElements(document.querySelectorAll('.map__pin:not(.map__pin--main)'));
       window.utils.removeElements(document.querySelectorAll('.map__card'));
@@ -43,6 +44,6 @@
       window.openErrorModal(window.closeErrorModal);
     };
 
-    window.request('GET', 'https://js.dump.academy/keksobooking/data', onSuccess, onError);
+    window.loadPinData(onSuccess, onError);
   };
 })();
