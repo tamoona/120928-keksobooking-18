@@ -3,7 +3,6 @@
 (function () {
   var MAIN_PIN_HEIGHT = 70;
   var MAIN_PIN_WIDTH = 70;
-  var ENTER_KEY_NUMBER = 13;
   var MAIN_PIN_START_POSITION = {
     x: 570,
     y: 375
@@ -35,11 +34,32 @@
     var imgElement = pinElement.querySelector('img');
     imgElement.src = data.author.avatar;
     imgElement.alt = data.offer.title;
+
+    // обработчик, благодаря которому пользователь может открыть карточку любого доступного объявления
+    var onPinClick = function () {
+      window.openNewCard(data);
+    };
+
+    // обработчик открытия карточки объявления с клавиатуры, карточка объявления для выбранного пина открывается при нажатии на клавишу Enter
+    var onPinKeydown = function (e) {
+      if (e.keyCode === window.consts.ENTER_KEY_NUMBER) {
+        window.openNewCard(data);
+      }
+    };
+
+    pinElement.addEventListener('click', onPinClick);
+    pinElement.addEventListener('keydown', onPinKeydown);
     return pinElement;
+  };
+
+  // функция, удаляющая пины, за исключением главного пина
+  window.removeMapPins = function () {
+    window.utils.removeElements(document.querySelectorAll('.map__pin:not(.map__pin--main)'));
   };
 
   // сгенерировать dom-елементы пинов и отобразить на карте
   window.renderMapPins = function (offers) {
+    window.removeMapPins();
     var listElement = document.querySelector('.map__pins');
     var fragment = document.createDocumentFragment();
     var pinTemplate = document.querySelector('#pin')
@@ -113,7 +133,7 @@
 
   // обработчик события для пина на карте, при нажатии клавиши ENTER
   var onMainPinKeydown = function (e) {
-    if (e.keyCode === ENTER_KEY_NUMBER && !mapActivated) {
+    if (e.keyCode === window.consts.ENTER_KEY_NUMBER && !mapActivated) {
       window.utils.togglePage(true);
       mapActivated = true;
       var coordinates = document.querySelector('.map__pin--main').getBoundingClientRect();
