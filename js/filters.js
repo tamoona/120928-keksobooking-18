@@ -4,10 +4,10 @@
   var DEFAULT_SELECT_VALUE = 'any';
   // текущие выбранные фильтры
   var activeFilters = {
-    'housing-type': 'any',
-    'housing-price': 'any',
-    'housing-rooms': 'any',
-    'housing-guests': 'any',
+    'housing-type': DEFAULT_SELECT_VALUE,
+    'housing-price': DEFAULT_SELECT_VALUE,
+    'housing-rooms': DEFAULT_SELECT_VALUE,
+    'housing-guests': DEFAULT_SELECT_VALUE,
     'housing-features': [],
   };
 
