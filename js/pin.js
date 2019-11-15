@@ -7,6 +7,21 @@
     x: 570,
     y: 375
   };
+  var SIMILAR_PINS_SELECTOR = '.map__pin:not(.map__pin--main)';
+  var MAIN_PIN_SELECTOR = '.map__pin--main';
+  var ACTIVE_PIN_CLASS = 'map__pin--active';
+
+  // функция, которая задаёт активное состояние пину
+  var activatePin = function (pinElement) {
+    pinElement.classList.add(ACTIVE_PIN_CLASS);
+  };
+
+  // функция, которая деактивирует состояние пина
+  window.deactivateAllPins = function () {
+    document.querySelectorAll(SIMILAR_PINS_SELECTOR).forEach(function (pinElement) {
+      pinElement.classList.remove(ACTIVE_PIN_CLASS);
+    });
+  };
 
   // функция, формирующая адрес
   var getAddress = function (x, y) {
@@ -20,7 +35,7 @@
 
   // функция, возвращающая пин в исходное положение
   window.resetMainPinPosition = function () {
-    window.utils.moveElement(document.querySelector('.map__pin--main'), MAIN_PIN_START_POSITION.x, MAIN_PIN_START_POSITION.y);
+    window.utils.moveElement(document.querySelector(MAIN_PIN_SELECTOR), MAIN_PIN_START_POSITION.x, MAIN_PIN_START_POSITION.y);
     setAddressFieldValue(MAIN_PIN_START_POSITION.x, MAIN_PIN_START_POSITION.y);
   };
 
@@ -37,12 +52,16 @@
     // обработчик, благодаря которому пользователь может открыть карточку любого доступного объявления
     var onPinClick = function () {
       window.openNewCard(data);
+      window.deactivateAllPins();
+      activatePin(pinElement);
     };
 
     // обработчик открытия карточки объявления с клавиатуры, карточка объявления для выбранного пина открывается при нажатии на клавишу Enter
     var onPinKeydown = function (e) {
       if (e.keyCode === window.consts.ENTER_KEY_NUMBER) {
         window.openNewCard(data);
+        window.deactivateAllPins();
+        activatePin(pinElement);
       }
     };
 
@@ -53,7 +72,7 @@
 
   // функция, удаляющая пины, за исключением главного пина
   window.removeMapPins = function () {
-    window.utils.removeElements(document.querySelectorAll('.map__pin:not(.map__pin--main)'));
+    window.utils.removeElements(document.querySelectorAll(SIMILAR_PINS_SELECTOR));
   };
 
   // сгенерировать dom-елементы пинов и отобразить на карте
@@ -137,7 +156,7 @@
     }
   };
 
-  var pinElement = document.querySelector('.map__pin--main');
+  var pinElement = document.querySelector(MAIN_PIN_SELECTOR);
   pinElement.addEventListener('mousedown', onPinMousedown);
   pinElement.addEventListener('keydown', onMainPinKeydown);
 

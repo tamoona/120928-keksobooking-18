@@ -135,6 +135,7 @@
     };
 
     window.removeCard();
+    window.deactivateAllPins();
     window.loadPinData(onSuccess, window.openErrorModal);
   };
 
