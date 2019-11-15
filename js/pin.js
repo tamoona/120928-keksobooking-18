@@ -75,6 +75,7 @@
   // обработчик события для пина на карте, при нажатии мышкой
   var onPinMousedown = function (e) {
     e.preventDefault();
+    var staticStartCoords = window.utils.getElementXY(pinElement);
     var startCoords = {
       x: e.clientX,
       y: e.clientY
@@ -85,6 +86,7 @@
     // обработчик события для перестаскивания главного пина
     var onMouseMove = function (moveEvt) {
       moveEvt.preventDefault();
+
       dragged = true;
       var shift = {
         x: startCoords.x - moveEvt.clientX,
@@ -123,16 +125,15 @@
     document.addEventListener('mouseup', onMouseUp);
 
     window.utils.togglePage(true);
-
-    setAddressFieldValue(startCoords.x, startCoords.y);
+    setAddressFieldValue(staticStartCoords.x, staticStartCoords.y);
   };
 
   // обработчик события для пина на карте, при нажатии клавиши ENTER
   var onMainPinKeydown = function (e) {
     if (e.keyCode === window.consts.ENTER_KEY_NUMBER) {
       window.utils.togglePage(true);
-      var coordinates = document.querySelector('.map__pin--main').getBoundingClientRect();
-      setAddressFieldValue(coordinates.x, coordinates.y);
+      var staticStartCoords = window.utils.getElementXY(pinElement);
+      setAddressFieldValue(staticStartCoords.x, staticStartCoords.y);
     }
   };
 

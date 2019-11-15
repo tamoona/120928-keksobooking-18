@@ -69,6 +69,14 @@
     element.style.left = x + 'px';
   };
 
+  // функция, получающая x и y координаты элемента
+  var getElementXY = function (element) {
+    return {
+      x: parseInt(element.style.left, 10),
+      y: parseInt(element.style.top, 10)
+    };
+  };
+
   window.utils = {
     getRandomInteger: getRandomInteger,
     getRandomArrayFromArray: getRandomArrayFromArray,
@@ -79,6 +87,7 @@
     getSelectedValue: getSelectedValue,
     setSelectValue: setSelectValue,
     togglePage: togglePage,
-    moveElement: moveElement
+    moveElement: moveElement,
+    getElementXY: getElementXY
   };
 })();
