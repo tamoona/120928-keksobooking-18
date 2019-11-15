@@ -162,6 +162,12 @@
     }
   };
 
+  // обработчик клика на нажатие кнопки 'очистить'
+  var onResetButtonClick = function (e) {
+    e.preventDefault();
+    window.resetForm();
+  };
+
   setValidGuestValue();
   validateTitleInput(titleInput.value.length);
   validatePrice();
@@ -170,4 +176,5 @@
   document.querySelector('#room_number').addEventListener('change', disableInvalidGuestValues);
   document.querySelector('#capacity').addEventListener('change', disableInvalidGuestValues);
   form.addEventListener('submit', onFormSubmit);
+  document.querySelector('.ad-form__reset').addEventListener('click', onResetButtonClick);
 })();
