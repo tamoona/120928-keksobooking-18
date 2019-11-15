@@ -10,6 +10,7 @@
   var HOUSE_PRICE = 5000;
   var PALACE_PRICE = 10000;
   var form = document.querySelector('.ad-form');
+  var defaultAvatarUrl = 'img/muffin-grey.svg';
 
   // отключение поля «Адреса»
   var disableAddress = function () {
@@ -123,10 +124,38 @@
     setValidGuestValue();
   };
 
+  // функция, создающая элемент превью аватара
+  var createPhotoPreview = function (src) {
+    var imageContainer = document.createElement('div');
+    var image = document.createElement('img');
+    imageContainer.classList.add('ad-form__photo');
+    image.src = src;
+    image.style.width = '70px';
+    image.style.height = '70px';
+    image.style.objectFit = 'cover';
+    imageContainer.append(image);
+    return imageContainer;
+  };
+
+  // функция, удаляющая все фотографии, за исключением дефолтной фотографии
+  var removePhotoPreviews = function () {
+    var photoPreviewElements = document.querySelectorAll('.ad-form__photo');
+    for (var i = 0; i < photoPreviewElements.length - 1; i++) {
+      photoPreviewElements[i].remove();
+    }
+  };
+
+  // функция, удаляющая превью аватарки
+  var removeAvatarPreview = function () {
+    document.querySelector('.ad-form-header__preview img').src = defaultAvatarUrl;
+  };
+
   // функция, переключающая состояние формы
   window.resetForm = function () {
     form.reset();
     disableInvalidGuestValues();
+    removePhotoPreviews();
+    removeAvatarPreview();
   };
 
   // функция, переключающая состояние формы
@@ -172,6 +201,47 @@
     window.resetForm();
   };
 
+  // функция, обрабатывающая превью аватарки
+  var onAvatarPreview = function (e) {
+    var preview = document.querySelector('.ad-form-header__preview img');
+    var file = e.target.files[0];
+    var reader = new FileReader();
+
+    reader.addEventListener('load', function (readerEvt) {
+      preview.src = readerEvt.target.result;
+    });
+
+    if (file && file.type.match('image')) {
+      reader.readAsDataURL(file);
+    } else {
+      preview.src = defaultAvatarUrl;
+    }
+  };
+
+  // функция, обрабатывающая превью аватарки
+  var onPhotosPreview = function (e) {
+    var files = e.target.files;
+    removePhotoPreviews();
+
+    for (var i = 0; i < files.length; i++) {
+      var file = files[i];
+
+      if (!file.type.match('image')) {
+        continue;
+      }
+
+      var reader = new FileReader();
+
+      reader.addEventListener('load', function (readerEvt) {
+        var photoContainer = document.querySelector('.ad-form__photo-container');
+        var photoPlaceholder = document.querySelector('.ad-form__photo');
+        photoContainer.insertBefore(createPhotoPreview(readerEvt.target.result), photoPlaceholder);
+      });
+
+      reader.readAsDataURL(file);
+    }
+  };
+
   setValidGuestValue();
   validateTitleInput(titleInput.value.length);
   validatePrice();
@@ -181,4 +251,6 @@
   document.querySelector('#capacity').addEventListener('change', disableInvalidGuestValues);
   form.addEventListener('submit', onFormSubmit);
   document.querySelector('.ad-form__reset').addEventListener('click', onResetButtonClick);
+  document.querySelector('.ad-form-header__input').addEventListener('change', onAvatarPreview);
+  document.querySelector('.ad-form__input').addEventListener('change', onPhotosPreview);
 })();
