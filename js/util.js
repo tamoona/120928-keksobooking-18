@@ -77,6 +77,25 @@
     };
   };
 
+  // функция, заполняющая данными элемент или удаляющая его если данных не существует
+  var setDataOrRemoveElement = function (element, data, attr) {
+    if (data) {
+      element[attr] = data;
+    } else {
+      element.remove();
+    }
+  };
+
+  // функция, заполняющая данными элемент или удаляющая его если данных не существует
+  var setChildrenOrRemoveElement = function (element, data, children) {
+    if (Array.isArray(data) && data.length > 0) {
+      element.innerHTML = '';
+      element.appendChild(children);
+    } else {
+      element.remove();
+    }
+  };
+
   window.utils = {
     getRandomInteger: getRandomInteger,
     getRandomArrayFromArray: getRandomArrayFromArray,
@@ -88,6 +107,8 @@
     setSelectValue: setSelectValue,
     togglePage: togglePage,
     moveElement: moveElement,
-    getElementXY: getElementXY
+    getElementXY: getElementXY,
+    setDataOrRemoveElement: setDataOrRemoveElement,
+    setChildrenOrRemoveElement: setChildrenOrRemoveElement
   };
 })();
