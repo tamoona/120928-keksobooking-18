@@ -1,84 +1,99 @@
 'use strict';
 
 (function () {
-  var DEFAULT_SELECT_VALUE = 'any';
-  var FILTER_FEATURES = 'features';
-  var FILTER_HOUSING_TYPE = 'housing-type';
-  var FILTER_HOUSING_PRICE = 'housing-price';
-  var FILTER_HOUSING_ROOMS = 'housing-rooms';
-  var FILTER_HOUSING_GUESTS = 'housing-guests';
   var HIGH_PRICE = 50000;
   var LOW_PRICE = 10000;
+  var defaultSelectValue = 'any';
+  var filterFeauters = 'features';
+  var filterHousingType = 'housing-type';
+  var filterHousingPrice = 'housing-price';
+  var filterHousingRooms = 'housing-rooms';
+  var filterHousingGuests = 'housing-guests';
 
   // текущие выбранные фильтры
   var activeFilters = {
-    'housing-type': DEFAULT_SELECT_VALUE,
-    'housing-price': DEFAULT_SELECT_VALUE,
-    'housing-rooms': DEFAULT_SELECT_VALUE,
-    'housing-guests': DEFAULT_SELECT_VALUE,
+    'housing-type': defaultSelectValue,
+    'housing-price': defaultSelectValue,
+    'housing-rooms': defaultSelectValue,
+    'housing-guests': defaultSelectValue,
     'features': [],
+  };
+
+  // функция, фильтрующая массив по выбранному пользователем типу жилья
+  var filterByHousingType = function (array) {
+    var selectedValue = activeFilters[filterHousingType];
+    if (selectedValue === defaultSelectValue) {
+      return array;
+    }
+    return array.filter(function (item) {
+      var type = item.offer.type;
+      return type === selectedValue;
+    });
+  };
+
+  // функция, фильтрующая массив по выбранной пользователем стоимости типа жилья
+  var filterByHousingPrice = function (array) {
+    var selectedValue = activeFilters[filterHousingPrice];
+    if (selectedValue === defaultSelectValue) {
+      return array;
+    }
+    return array.filter(function (item) {
+      var price = item.offer.price;
+      if (selectedValue === 'middle') {
+        return price >= LOW_PRICE && price <= HIGH_PRICE;
+      } else if (selectedValue === 'low') {
+        return price < LOW_PRICE;
+      } else if (selectedValue === 'high') {
+        return price > HIGH_PRICE;
+      }
+      return false;
+    });
+  };
+
+  // функция, фильтрующая массив по выбранному пользователем количетсву комнат
+  var filterByHousingRooms = function (array) {
+    var selectedValue = activeFilters[filterHousingRooms];
+    if (selectedValue === defaultSelectValue) {
+      return array;
+    }
+    return array.filter(function (item) {
+      var rooms = item.offer.rooms;
+      return rooms === parseInt(selectedValue, 10);
+    });
+  };
+
+  // функция, фильтрующая массив по выбранному пользователем количеству гостей
+  var filterByHousingGuests = function (array) {
+    var selectedValue = activeFilters[filterHousingGuests];
+    if (selectedValue === defaultSelectValue) {
+      return array;
+    }
+    return array.filter(function (item) {
+      var guests = item.offer.guests;
+      return guests === parseInt(selectedValue, 10);
+    });
+  };
+
+  // функция, фильтрующая массив по преимуществам, выбранных пользователем
+  var filterByFeatures = function (array) {
+    var selectedValue = activeFilters[filterFeauters];
+    if (!selectedValue.length) {
+      return array;
+    }
+    return array.filter(function (item) {
+      return selectedValue.every(function (feature) {
+        return item.offer.features.indexOf(feature) >= 0;
+      });
+    });
   };
 
   // функции фильтрации для фильтров
   var filterHandlers = {
-    'housing-type': function (array) {
-      var selectedValue = activeFilters[FILTER_HOUSING_TYPE];
-      if (selectedValue === DEFAULT_SELECT_VALUE) {
-        return array;
-      }
-      return array.filter(function (item) {
-        var type = item.offer.type;
-        return type === selectedValue;
-      });
-    },
-    'housing-price': function (array) {
-      var selectedValue = activeFilters[FILTER_HOUSING_PRICE];
-      if (selectedValue === DEFAULT_SELECT_VALUE) {
-        return array;
-      }
-      return array.filter(function (item) {
-        var price = item.offer.price;
-        if (selectedValue === 'middle') {
-          return price >= LOW_PRICE && price <= HIGH_PRICE;
-        } else if (selectedValue === 'low') {
-          return price < LOW_PRICE;
-        } else if (selectedValue === 'high') {
-          return price > HIGH_PRICE;
-        }
-        return false;
-      });
-    },
-    'housing-rooms': function (array) {
-      var selectedValue = activeFilters[FILTER_HOUSING_ROOMS];
-      if (selectedValue === DEFAULT_SELECT_VALUE) {
-        return array;
-      }
-      return array.filter(function (item) {
-        var rooms = item.offer.rooms;
-        return rooms === parseInt(selectedValue, 10);
-      });
-    },
-    'housing-guests': function (array) {
-      var selectedValue = activeFilters[FILTER_HOUSING_GUESTS];
-      if (selectedValue === DEFAULT_SELECT_VALUE) {
-        return array;
-      }
-      return array.filter(function (item) {
-        var guests = item.offer.guests;
-        return guests === parseInt(selectedValue, 10);
-      });
-    },
-    'features': function (array) {
-      var selectedValue = activeFilters[FILTER_FEATURES];
-      if (!selectedValue.length) {
-        return array;
-      }
-      return array.filter(function (item) {
-        return selectedValue.every(function (feature) {
-          return item.offer.features.indexOf(feature) >= 0;
-        });
-      });
-    }
+    'housing-type': filterByHousingType,
+    'housing-price': filterByHousingPrice,
+    'housing-rooms': filterByHousingRooms,
+    'housing-guests': filterByHousingGuests,
+    'features': filterByFeatures
   };
 
   // функция, возвращающая объявления с полем 'offer'
@@ -124,8 +139,8 @@
     var selectedFilterType = e.target.name;
     activeFilters[selectedFilterType] = value;
 
-    if (selectedFilterType === FILTER_FEATURES) {
-      var checkboxesSelector = '.map__features [name="' + FILTER_FEATURES + '"]:checked';
+    if (selectedFilterType === filterFeauters) {
+      var checkboxesSelector = '.map__features [name="' + filterFeauters + '"]:checked';
       activeFilters[selectedFilterType] = getCheckedBoxesValues(document.querySelectorAll(checkboxesSelector));
     }
 
