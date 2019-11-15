@@ -1,8 +1,6 @@
 'use strict';
 
 (function () {
-  var ESC_KEY_NUMBER = 27;
-
   // закрытие окна ошибки
   window.closeErrorModal = function () {
     window.utils.removeElement(document.querySelector('main .error'));
@@ -18,7 +16,7 @@
       }
     };
     var onErrorModalKeydown = function (e) {
-      if (e.keyCode === ESC_KEY_NUMBER) {
+      if (e.keyCode === window.consts.ESC_KEY_NUMBER) {
         window.closeErrorModal();
       }
     };
@@ -42,7 +40,7 @@
     var successModalTemplate = document.querySelector('#success').content.cloneNode(true);
     successModalTemplate.querySelector('.success').addEventListener('click', window.closeSuccessModal);
     var onSuccessModalKeydown = function (e) {
-      if (e.keyCode === ESC_KEY_NUMBER) {
+      if (e.keyCode === window.consts.ESC_KEY_NUMBER) {
         window.closeSuccessModal();
       }
     };

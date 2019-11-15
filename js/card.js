@@ -1,11 +1,15 @@
 'use strict';
 
 (function () {
-  var ESC_KEY_NUMBER = 27;
+  // функция, которая убирает карточку объявления
+  window.removeCard = function () {
+    window.utils.removeElements(document.querySelectorAll('.map .map__card'));
+  };
+
   // обработчик закрытия карточки с подробной информацией по нажатию клавиши Esc
   var closePopupButtonEsc = function (e) {
-    if (e.keyCode === ESC_KEY_NUMBER) {
-      window.utils.removeElements(document.querySelectorAll('.map .map__card'));
+    if (e.keyCode === window.consts.ESC_KEY_NUMBER) {
+      window.removeCard();
     }
   };
 
@@ -69,13 +73,12 @@
 
   // вспомогательная функция для перерисовки карты на основе переданных данных
   window.openNewCard = function (data) {
-    window.utils.removeElements(document.querySelectorAll('.map .map__card'));
+    window.removeCard();
     renderCard(data);
     var popup = document.querySelector('.map__card');
     var closePopupButton = popup.querySelector('.popup__close');
 
-    closePopupButton.addEventListener('click', function () {
-      window.utils.removeElements(document.querySelectorAll('.map .map__card'));
-    });
+    closePopupButton.addEventListener('click', window.removeCard);
   };
+
 })();
