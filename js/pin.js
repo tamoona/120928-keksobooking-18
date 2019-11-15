@@ -7,7 +7,6 @@
     x: 570,
     y: 375
   };
-  var mapActivated = false;
 
   // функция, формирующая адрес
   var getAddress = function (x, y) {
@@ -123,19 +122,15 @@
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
 
-    if (!mapActivated) {
-      window.utils.togglePage(true);
-      mapActivated = true;
-    }
+    window.utils.togglePage(true);
 
     setAddressFieldValue(startCoords.x, startCoords.y);
   };
 
   // обработчик события для пина на карте, при нажатии клавиши ENTER
   var onMainPinKeydown = function (e) {
-    if (e.keyCode === window.consts.ENTER_KEY_NUMBER && !mapActivated) {
+    if (e.keyCode === window.consts.ENTER_KEY_NUMBER) {
       window.utils.togglePage(true);
-      mapActivated = true;
       var coordinates = document.querySelector('.map__pin--main').getBoundingClientRect();
       setAddressFieldValue(coordinates.x, coordinates.y);
     }
