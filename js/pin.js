@@ -119,8 +119,11 @@
 
       var positionY = pinElement.offsetTop - shift.y;
       var positionX = pinElement.offsetLeft - shift.x;
+      var boundariesYMin = window.consts.COORDINATES_Y_MIN - MAIN_PIN_HEIGHT;
+      var boundariesYMax = window.consts.COORDINATES_Y_MAX - MAIN_PIN_HEIGHT;
 
-      if (positionY >= window.COORDINATES_Y_MIN && positionY <= window.COORDINATES_Y_MAX && positionX <= xBoundaries && positionX >= 0) {
+      if (positionY >= boundariesYMin && positionY <= boundariesYMax && positionX <= xBoundaries && positionX >= 0) {
+
         window.utils.moveElement(pinElement, positionX, positionY);
         setAddressFieldValue(positionX, positionY);
       }
