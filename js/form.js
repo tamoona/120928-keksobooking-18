@@ -37,22 +37,26 @@
   // валидация для полей «Тип жилья» и «Цена за ночь»
   var houseType = document.querySelector('select[name="type"]');
   var validatePrice = function () {
-
     var priceInput = document.querySelector('input[name="price"]');
     priceInput.required = true;
 
-    if (houseType.value === 'bungalo') {
-      priceInput.min = BUNGALO_PRICE;
-      priceInput.placeholder = BUNGALO_PRICE;
-    } else if (houseType.value === 'flat') {
-      priceInput.min = FLAT_PRICE;
-      priceInput.placeholder = FLAT_PRICE;
-    } else if (houseType.value === 'house') {
-      priceInput.min = HOUSE_PRICE;
-      priceInput.placeholder = HOUSE_PRICE;
-    } else if (houseType.value === 'palace') {
-      priceInput.min = PALACE_PRICE;
-      priceInput.placeholder = PALACE_PRICE;
+    switch (houseType.value) {
+      case 'bungalo':
+        priceInput.min = BUNGALO_PRICE;
+        priceInput.placeholder = BUNGALO_PRICE;
+        break;
+      case 'flat':
+        priceInput.min = FLAT_PRICE;
+        priceInput.placeholder = FLAT_PRICE;
+        break;
+      case 'house':
+        priceInput.min = HOUSE_PRICE;
+        priceInput.placeholder = HOUSE_PRICE;
+        break;
+      case 'palace':
+        priceInput.min = PALACE_PRICE;
+        priceInput.placeholder = PALACE_PRICE;
+        break;
     }
   };
   houseType.addEventListener('change', validatePrice);
