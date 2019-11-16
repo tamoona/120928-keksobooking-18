@@ -1,16 +1,16 @@
 'use strict';
 
 (function () {
-  var pageActivated = false;
+  var isPageActivated = false;
 
   // функция, которая переключает состояние страницы
   window.togglePage = function (isPageActive) {
     // ранний возврат из функции, если текущее состояние страницы совпадает с новым состоянием
-    if (pageActivated === isPageActive) {
+    if (isPageActivated === isPageActive) {
       return;
     }
 
-    pageActivated = isPageActive;
+    isPageActivated = isPageActive;
 
     window.toggleMap(isPageActive);
     window.toggleFieldset(isPageActive);

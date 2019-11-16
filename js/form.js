@@ -130,8 +130,8 @@
   };
 
   // функция, переключающая состояние формы
-  window.toggleForm = function (state) {
-    form.classList.toggle('ad-form--disabled', !state);
+  window.toggleForm = function (isFormActive) {
+    form.classList.toggle('ad-form--disabled', !isFormActive);
     window.resetForm();
   };
 
@@ -150,10 +150,10 @@
   };
 
   // функция, переключающая состояния полей
-  window.toggleFieldset = function (state) {
+  window.toggleFieldset = function (isFieldsetActive) {
     var fieldsetElements = document.querySelectorAll('.ad-form fieldset');
     for (var i = 0; i < fieldsetElements.length; i++) {
-      fieldsetElements[i].disabled = !state;
+      fieldsetElements[i].disabled = !isFieldsetActive;
     }
   };
 
