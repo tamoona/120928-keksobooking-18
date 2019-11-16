@@ -53,6 +53,19 @@
     return fragment;
   };
 
+  // соотнести текст к селекторам
+  var mapTextToCardSelectors = function (data) {
+    return {
+      '.popup__title': data.offer.title,
+      '.popup__text--address': data.offer.address,
+      '.popup__text--price': data.offer.price + '₽/ночь',
+      '.popup__text--capacity': data.offer.rooms + ' комнаты для ' + data.offer.guests + ' гостей',
+      '.popup__text--time': 'Заезд после ' + data.offer.checkin + ',' + ' выезд до' + data.offer.checkout,
+      '.popup__type': getReadableOfferType(data.offer.type),
+      '.popup__description': data.offer.description
+    };
+  };
+
   // заполнить окно с информацией об объявлении
   var updateCard = function (card, data) {
     var cardElement = card.querySelector('.map__card');
@@ -61,14 +74,15 @@
     var featureSectionElement = cardElement.querySelector('.popup__features');
     var photoUrls = data.offer.photos;
     var features = data.offer.features;
+    var selectorsToContent = mapTextToCardSelectors(data);
 
-    window.utils.setDataOrRemoveElement(cardElement.querySelector('.popup__title'), data.offer.title, 'textContent');
-    window.utils.setDataOrRemoveElement(cardElement.querySelector('.popup__text--address'), data.offer.address, 'textContent');
-    window.utils.setDataOrRemoveElement(cardElement.querySelector('.popup__text--price'), data.offer.price + '₽/ночь', 'textContent');
-    window.utils.setDataOrRemoveElement(cardElement.querySelector('.popup__type'), getReadableOfferType(data.offer.type), 'textContent');
-    window.utils.setDataOrRemoveElement(cardElement.querySelector('.popup__text--capacity'), data.offer.rooms + ' комнаты для ' + data.offer.guests + ' гостей', 'textContent');
-    window.utils.setDataOrRemoveElement(cardElement.querySelector('.popup__text--time'), 'Заезд после ' + data.offer.checkin + ',' + ' выезд до' + data.offer.checkout, 'textContent');
-    window.utils.setDataOrRemoveElement(cardElement.querySelector('.popup__description'), data.offer.description, 'textContent');
+    for (var selector in selectorsToContent) {
+      if (!Object.prototype.hasOwnProperty.call(selectorsToContent, selector)) {
+        continue;
+      }
+      window.utils.setDataOrRemoveElement(cardElement.querySelector(selector), selectorsToContent[selector], 'textContent');
+    }
+
     window.utils.setDataOrRemoveElement(cardElement.querySelector('.popup__avatar'), data.author.avatar, 'src');
 
     window.utils.setChildrenOrRemoveElement(photoSectionElement, photoUrls, generateOfferPhotos(photoTemplate, photoUrls));
