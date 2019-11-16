@@ -11,6 +11,20 @@
   var mainPinSelector = '.map__pin--main';
   var activePinSelector = '.map__pin--active';
 
+  // функция, изменяющая позиционирование элемента
+  var moveElement = function (element, x, y) {
+    element.style.top = y + 'px';
+    element.style.left = x + 'px';
+  };
+
+  // функция, получающая x и y координаты элемента
+  var getElementXY = function (element) {
+    return {
+      x: parseInt(element.style.left, 10),
+      y: parseInt(element.style.top, 10)
+    };
+  };
+
   // функция, которая задаёт активное состояние пину
   var activatePin = function (pinElement) {
     pinElement.classList.add(activePinSelector.slice(1));
@@ -40,7 +54,7 @@
 
   // функция, возвращающая пин в исходное положение
   window.resetMainPinPosition = function () {
-    window.utils.moveElement(document.querySelector(mainPinSelector), MAIN_PIN_START_POSITION.x, MAIN_PIN_START_POSITION.y);
+    moveElement(document.querySelector(mainPinSelector), MAIN_PIN_START_POSITION.x, MAIN_PIN_START_POSITION.y);
     setAddressFieldValue(MAIN_PIN_START_POSITION.x, MAIN_PIN_START_POSITION.y, true);
   };
 
@@ -99,7 +113,7 @@
   // обработчик события для пина на карте, при нажатии мышкой
   var onPinMousedown = function (e) {
     e.preventDefault();
-    var staticStartCoords = window.utils.getElementXY(pinElement);
+    var staticStartCoords = getElementXY(pinElement);
     var startCoords = {
       x: e.clientX,
       y: e.clientY
@@ -129,7 +143,7 @@
 
       if (positionY >= boundariesYMin && positionY <= boundariesYMax && positionX <= xBoundaries && positionX >= 0) {
 
-        window.utils.moveElement(pinElement, positionX, positionY);
+        moveElement(pinElement, positionX, positionY);
         setAddressFieldValue(positionX, positionY);
       }
     };
@@ -159,7 +173,7 @@
   var onMainPinKeydown = function (e) {
     if (e.keyCode === window.consts.ENTER_KEY_NUMBER) {
       window.togglePage(true);
-      var staticStartCoords = window.utils.getElementXY(pinElement);
+      var staticStartCoords = getElementXY(pinElement);
       setAddressFieldValue(staticStartCoords.x, staticStartCoords.y);
     }
   };

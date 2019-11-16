@@ -30,20 +30,6 @@
     element.value = value;
   };
 
-  // функция, изменяющая позиционирование элемента
-  var moveElement = function (element, x, y) {
-    element.style.top = y + 'px';
-    element.style.left = x + 'px';
-  };
-
-  // функция, получающая x и y координаты элемента
-  var getElementXY = function (element) {
-    return {
-      x: parseInt(element.style.left, 10),
-      y: parseInt(element.style.top, 10)
-    };
-  };
-
   // функция, заполняющая данными элемент или удаляющая его если данных не существует
   var setDataOrRemoveElement = function (element, data, attr) {
     if (data) {
@@ -86,28 +72,14 @@
     };
   };
 
-  // добавить границу элементу
-  var setCustomBorder = function (element) {
-    element.style.border = '1px solid red';
-  };
-
-  // удалить границу у элемента
-  var resetCustomBorder = function (element) {
-    element.style.border = '1px solid #d9d9d3';
-  };
-
   window.utils = {
     setFieldValue: setFieldValue,
     removeElement: removeElement,
     removeElements: removeElements,
     getSelectedValue: getSelectedValue,
     setSelectValue: setSelectValue,
-    moveElement: moveElement,
-    getElementXY: getElementXY,
     setDataOrRemoveElement: setDataOrRemoveElement,
     setChildrenOrRemoveElement: setChildrenOrRemoveElement,
     debounce: debounce,
-    setCustomBorder: setCustomBorder,
-    resetCustomBorder: resetCustomBorder
   };
 })();
