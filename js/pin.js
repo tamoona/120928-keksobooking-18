@@ -83,10 +83,10 @@
     var pinTemplate = document.querySelector('#pin')
       .content;
 
-    for (var i = 0; i < offers.length; i++) {
-      var pinElement = updateMapPin(pinTemplate.cloneNode(true), offers[i], i);
+    offers.forEach(function (offer, index) {
+      var pinElement = updateMapPin(pinTemplate.cloneNode(true), offer, index);
       fragment.appendChild(pinElement);
-    }
+    });
 
     listElement.appendChild(fragment);
   };
