@@ -77,14 +77,7 @@
 
   // функция, которая проверяет валидность количества гостей по отношению к количеству комнат
   var isGuestNumberValid = function (roomNumber, guestNumber) {
-    if (roomNumber >= guestNumber) {
-      if (roomNumber === NO_GUESTS_ROOM_NUMBER && guestNumber !== NO_GUESTS_NUMBER || roomNumber !== NO_GUESTS_ROOM_NUMBER && guestNumber === NO_GUESTS_NUMBER) {
-        return false;
-      }
-      return true;
-    } else {
-      return false;
-    }
+    return roomNumber >= guestNumber && !(roomNumber === NO_GUESTS_ROOM_NUMBER && guestNumber !== NO_GUESTS_NUMBER || roomNumber !== NO_GUESTS_ROOM_NUMBER && guestNumber === NO_GUESTS_NUMBER);
   };
 
   // функция, которая возвращает корректное количество гостей в соотношении с количеством комнат
