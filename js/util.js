@@ -1,31 +1,6 @@
 'use strict';
 
 (function () {
-// cлучайное число диапазона
-  var getRandomInteger = function (min, max) {
-    var rand = min + Math.random() * (max + 1 - min);
-    return Math.floor(rand);
-  };
-
-  // генерация массива случайной длины на основе массива
-  var getRandomArrayFromArray = function (array) {
-    var lastElementIndex = array.length - 1;
-    var randomArrayStartIndex = getRandomInteger(0, lastElementIndex);
-    var randomArrayEndIndex = getRandomInteger(randomArrayStartIndex, lastElementIndex);
-
-    if (randomArrayStartIndex === randomArrayEndIndex) {
-      return array.slice(randomArrayStartIndex);
-    }
-
-    return array.slice(randomArrayStartIndex, randomArrayEndIndex);
-  };
-
-  // генерация случайного элемента из массива
-  var getRandomValueFromArray = function (array) {
-    var index = getRandomInteger(0, array.length - 1);
-    return array[index];
-  };
-
   // функция, добавляющая значение в поле
   var setFieldValue = function (fieldElement, value) {
     fieldElement.value = value;
@@ -55,30 +30,56 @@
     element.value = value;
   };
 
-  // функция, которая переключает состояние страницы
-  var togglePage = function (state) {
-    window.toggleMap(state);
-    window.toggleFieldset(state);
-    window.toggleFilters(state);
-    window.toggleForm(state);
+  // функция, заполняющая данными элемент или удаляющая его если данных не существует
+  var setDataOrRemoveElement = function (element, data, attr) {
+    if (data) {
+      element[attr] = data;
+    } else {
+      element.remove();
+    }
   };
 
-  // функция, изменяющая позиционирование элемента
-  var moveElement = function (element, x, y) {
-    element.style.top = y + 'px';
-    element.style.left = x + 'px';
+  // функция, заполняющая данными элемент или удаляющая его если данных не существует
+  var setChildrenOrRemoveElement = function (element, data, children) {
+    if (Array.isArray(data) && data.length > 0) {
+      element.innerHTML = '';
+      element.appendChild(children);
+    } else {
+      element.remove();
+    }
+  };
+
+  // Возвращает функцию, которая не будет срабатывать, пока продолжает вызываться.
+  // Она сработает только один раз через N миллисекунд после последнего вызова.
+  // Если ей передан аргумент `isImmediate`, то она будет вызвана один раз сразу после
+  // первого запуска.
+  var debounce = function (cb, wait, isImmediate) {
+    var timeout;
+    return function () {
+      var args = arguments;
+      var later = function () {
+        timeout = null;
+        if (!isImmediate) {
+          cb.apply(cb, args);
+        }
+      };
+      var callNow = isImmediate && !timeout;
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
+      if (callNow) {
+        cb.apply(cb, args);
+      }
+    };
   };
 
   window.utils = {
-    getRandomInteger: getRandomInteger,
-    getRandomArrayFromArray: getRandomArrayFromArray,
-    getRandomValueFromArray: getRandomValueFromArray,
     setFieldValue: setFieldValue,
     removeElement: removeElement,
     removeElements: removeElements,
     getSelectedValue: getSelectedValue,
     setSelectValue: setSelectValue,
-    togglePage: togglePage,
-    moveElement: moveElement
+    setDataOrRemoveElement: setDataOrRemoveElement,
+    setChildrenOrRemoveElement: setChildrenOrRemoveElement,
+    debounce: debounce,
   };
 })();
