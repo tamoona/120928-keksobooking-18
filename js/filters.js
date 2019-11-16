@@ -188,10 +188,12 @@
     var onSuccess = function (data) {
       var validPins = filterData(filterValidOffers(data));
       window.renderMapPins(getMaxPins(validPins));
+      window.toggleFilters(true);
     };
 
     window.removeCard();
     window.deactivateAllPins();
+    window.toggleFilters(false);
     window.loadPinData(onSuccess, window.openErrorModal);
   };
 

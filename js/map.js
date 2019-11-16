@@ -15,12 +15,14 @@
 
     var onSuccess = function (pinData) {
       window.renderMapPins(window.filters.getMaxPins(window.filters.filterValidOffers(pinData)));
+      window.toggleFilters(true);
     };
 
     var onError = function () {
       window.openErrorModal(window.closeErrorModal);
     };
 
+    window.toggleFilters(false);
     window.loadPinData(onSuccess, onError);
   };
 })();

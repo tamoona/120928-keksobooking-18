@@ -14,7 +14,6 @@
 
     window.toggleMap(isPageActive);
     window.toggleFieldset(isPageActive);
-    window.toggleFilters(isPageActive);
     window.toggleForm(isPageActive);
     window.resetAllFilters();
   };
