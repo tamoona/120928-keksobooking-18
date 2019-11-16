@@ -19,14 +19,24 @@
 
   // добавить границу элементу, который сгенерировал событие
   var setTargetBorder = function (e) {
-    window.utils.setCustomBorder(e.target);
+    setCustomBorder(e.target);
   };
 
   // удалить границу у элемента, который сгенерировал событие, если он проходит проверку на валидность
   var resetBorderIfTargetValid = function (e) {
     if (e.target.validity.valid) {
-      window.utils.resetCustomBorder(e.target);
+      resetCustomBorder(e.target);
     }
+  };
+
+  // добавить границу элементу
+  var setCustomBorder = function (element) {
+    element.style.border = '1px solid red';
+  };
+
+  // удалить границу у элемента
+  var resetCustomBorder = function (element) {
+    element.style.border = '1px solid #d9d9d3';
   };
 
   // валидация для поля «Заголовок объявления»
@@ -51,7 +61,7 @@
     priceInput.max = PRICE_MAX;
 
     if (priceInput.validity.valid) {
-      window.utils.resetCustomBorder(titleInput);
+      resetCustomBorder(titleInput);
     }
 
     switch (houseType.value) {
