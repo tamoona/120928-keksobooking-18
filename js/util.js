@@ -86,6 +86,16 @@
     };
   };
 
+  // добавить границу элементу
+  var setCustomBorder = function (element) {
+    element.style.border = '1px solid red';
+  };
+
+  // удалить границу у элемента
+  var resetCustomBorder = function (element) {
+    element.style.border = '1px solid #d9d9d3';
+  };
+
   window.utils = {
     setFieldValue: setFieldValue,
     removeElement: removeElement,
@@ -96,6 +106,8 @@
     getElementXY: getElementXY,
     setDataOrRemoveElement: setDataOrRemoveElement,
     setChildrenOrRemoveElement: setChildrenOrRemoveElement,
-    debounce: debounce
+    debounce: debounce,
+    setCustomBorder: setCustomBorder,
+    resetCustomBorder: resetCustomBorder
   };
 })();
