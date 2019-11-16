@@ -140,22 +140,13 @@
     e.preventDefault();
     var formData = new FormData(e.target);
     var onSuccess = function () {
-      window.resetForm();
-      window.toggleMap(false);
       window.openSuccessModal();
+      window.utils.togglePage(false);
     };
     var onError = function () {
       window.openErrorModal(window.closeErrorModal);
     };
     window.sendFormData(formData, onSuccess, onError);
-  };
-
-  // функция, переключающая активное состояние формы с фильтрами
-  window.toggleFilters = function (state) {
-    var filtersElements = document.querySelectorAll('.map__filters select, .map__filters fieldset');
-    for (var i = 0; i < filtersElements.length; i++) {
-      filtersElements[i].disabled = !state;
-    }
   };
 
   // функция, переключающая состояния полей
@@ -169,7 +160,7 @@
   // обработчик клика на нажатие кнопки 'очистить'
   var onResetButtonClick = function (e) {
     e.preventDefault();
-    window.resetForm();
+    window.utils.togglePage(false);
   };
 
   setValidGuestValue();
