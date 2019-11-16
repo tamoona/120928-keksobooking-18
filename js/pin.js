@@ -1,42 +1,47 @@
 'use strict';
 
 (function () {
-  var MAIN_PIN_HEIGHT = 70;
-  var MAIN_PIN_WIDTH = 70;
+  var MAIN_PIN_HEIGHT = 65;
+  var MAIN_PIN_WIDTH = 65;
   var MAIN_PIN_START_POSITION = {
     x: 570,
     y: 375
   };
   var similarPinsSelector = '.map__pin:not(.map__pin--main)';
   var mainPinSelector = '.map__pin--main';
-  var activePinClass = 'map__pin--active';
+  var activePinSelector = '.map__pin--active';
 
   // функция, которая задаёт активное состояние пину
   var activatePin = function (pinElement) {
-    pinElement.classList.add(activePinClass);
+    pinElement.classList.add(activePinSelector.slice(1));
+  };
+
+  // функция, которая задаёт неактивное состояние пину
+  var deactivatePin = function (pinElement) {
+    pinElement.classList.remove(activePinSelector.slice(1));
   };
 
   // функция, которая деактивирует состояние пина
   window.deactivateAllPins = function () {
-    document.querySelectorAll(similarPinsSelector).forEach(function (pinElement) {
-      pinElement.classList.remove(activePinClass);
-    });
+    document.querySelectorAll(similarPinsSelector).forEach(deactivatePin);
   };
 
   // функция, формирующая адрес
-  var getAddress = function (x, y) {
-    return Math.round(x + MAIN_PIN_WIDTH / 2) + ', ' + Math.round(y + MAIN_PIN_HEIGHT);
+  var getAddress = function (x, y, isInitial) {
+    var xPosition = x + MAIN_PIN_WIDTH / 2;
+    var yPosition = y + (isInitial ? MAIN_PIN_HEIGHT / 2 : MAIN_PIN_HEIGHT);
+    return Math.round(xPosition) + ', ' + Math.round(yPosition);
   };
 
   // функция, утсанавливающая значение поля "адрес"
-  var setAddressFieldValue = function (x, y) {
-    window.utils.setFieldValue(document.querySelector('#address'), getAddress(x, y));
+  var setAddressFieldValue = function (x, y, isInitial) {
+    window.utils.setFieldValue(document.querySelector('#address'), getAddress(x, y, isInitial));
   };
 
   // функция, возвращающая пин в исходное положение
   window.resetMainPinPosition = function () {
     window.utils.moveElement(document.querySelector(mainPinSelector), MAIN_PIN_START_POSITION.x, MAIN_PIN_START_POSITION.y);
-    setAddressFieldValue(MAIN_PIN_START_POSITION.x, MAIN_PIN_START_POSITION.y);
+    setAddressFieldValue(MAIN_PIN_START_POSITION.x, MAIN_PIN_START_POSITION.y, true);
   };
 
   // заполнить пин данными
@@ -83,10 +88,10 @@
     var pinTemplate = document.querySelector('#pin')
       .content;
 
-    for (var i = 0; i < offers.length; i++) {
-      var pinElement = updateMapPin(pinTemplate.cloneNode(true), offers[i], i);
+    offers.forEach(function (offer, index) {
+      var pinElement = updateMapPin(pinTemplate.cloneNode(true), offer, index);
       fragment.appendChild(pinElement);
-    }
+    });
 
     listElement.appendChild(fragment);
   };
@@ -146,21 +151,23 @@
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
 
-    window.utils.togglePage(true);
+    window.togglePage(true);
     setAddressFieldValue(staticStartCoords.x, staticStartCoords.y);
   };
 
   // обработчик события для пина на карте, при нажатии клавиши ENTER
   var onMainPinKeydown = function (e) {
     if (e.keyCode === window.consts.ENTER_KEY_NUMBER) {
-      window.utils.togglePage(true);
+      window.togglePage(true);
       var staticStartCoords = window.utils.getElementXY(pinElement);
       setAddressFieldValue(staticStartCoords.x, staticStartCoords.y);
     }
   };
 
   var pinElement = document.querySelector(mainPinSelector);
+
   pinElement.addEventListener('mousedown', onPinMousedown);
   pinElement.addEventListener('keydown', onMainPinKeydown);
 
+  setAddressFieldValue(MAIN_PIN_START_POSITION.x, MAIN_PIN_START_POSITION.y, true);
 })();

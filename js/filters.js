@@ -3,12 +3,14 @@
 (function () {
   var HIGH_PRICE = 50000;
   var LOW_PRICE = 10000;
+  var DEBOUNCE_DELAY = 500;
   var defaultSelectValue = 'any';
   var filterFeatures = 'features';
   var filterHousingType = 'housing-type';
   var filterHousingPrice = 'housing-price';
   var filterHousingRooms = 'housing-rooms';
   var filterHousingGuests = 'housing-guests';
+  var optimizedDataLoad = window.utils.debounce(window.loadPinData, DEBOUNCE_DELAY);
 
   // функция, возвращающая первоначальное состояние фильтров
   var getDefaultFilters = function () {
@@ -26,7 +28,7 @@
 
   // функция, сбрасывающая состояние фильтра-селектбокса
   var resetSelectFilter = function (element) {
-    window.utils.setFieldValue(element, 'any');
+    window.utils.setFieldValue(element, defaultSelectValue);
   };
 
   // функция, сбрасывающая состояние фильтра, состоящего из чекбоксов
@@ -53,10 +55,10 @@
   };
 
   // функция, переключающая активное состояние формы с фильтрами
-  window.toggleFilters = function (state) {
+  window.toggleFilters = function (areFiltersActive) {
     var filtersElements = document.querySelectorAll('.map__filters select, .map__filters fieldset');
     for (var i = 0; i < filtersElements.length; i++) {
-      filtersElements[i].disabled = !state;
+      filtersElements[i].disabled = !areFiltersActive;
     }
   };
 
@@ -192,7 +194,7 @@
 
     window.removeCard();
     window.deactivateAllPins();
-    window.loadPinData(onSuccess, window.openErrorModal);
+    optimizedDataLoad(onSuccess, window.openErrorModal);
   };
 
   document.querySelector('#housing-type').addEventListener('change', onFilterChange);
