@@ -4,19 +4,60 @@
   var HIGH_PRICE = 50000;
   var LOW_PRICE = 10000;
   var defaultSelectValue = 'any';
-  var filterFeauters = 'features';
+  var filterFeatures = 'features';
   var filterHousingType = 'housing-type';
   var filterHousingPrice = 'housing-price';
   var filterHousingRooms = 'housing-rooms';
   var filterHousingGuests = 'housing-guests';
 
+  // функция, возвращающая первоначальное состояние фильтров
+  var getDefaultFilters = function () {
+    return {
+      'housing-type': defaultSelectValue,
+      'housing-price': defaultSelectValue,
+      'housing-rooms': defaultSelectValue,
+      'housing-guests': defaultSelectValue,
+      'features': [],
+    };
+  };
+
   // текущие выбранные фильтры
-  var activeFilters = {
-    'housing-type': defaultSelectValue,
-    'housing-price': defaultSelectValue,
-    'housing-rooms': defaultSelectValue,
-    'housing-guests': defaultSelectValue,
-    'features': [],
+  var activeFilters = getDefaultFilters();
+
+  // функция, сбрасывающая состояние фильтра-селектбокса
+  var resetSelectFilter = function (element) {
+    window.utils.setFieldValue(element, 'any');
+  };
+
+  // функция, сбрасывающая состояние фильтра, состоящего из чекбоксов
+  var resetCheckboxFilter = function (nodeList) {
+    nodeList.forEach(function (element) {
+      element.checked = false;
+    });
+  };
+
+  // функция, сбрасывающая состояние всех фильтров
+  window.resetAllFilters = function () {
+    activeFilters = getDefaultFilters();
+    for (var key in activeFilters) {
+      if (!Object.prototype.hasOwnProperty.call(activeFilters, key)) {
+        continue;
+      }
+      if (key === filterFeatures) {
+        resetCheckboxFilter(document.querySelectorAll('.map__checkbox:checked'));
+      } else {
+        var selector = '[name="' + key + '"]';
+        resetSelectFilter(document.querySelector(selector));
+      }
+    }
+  };
+
+  // функция, переключающая активное состояние формы с фильтрами
+  window.toggleFilters = function (state) {
+    var filtersElements = document.querySelectorAll('.map__filters select, .map__filters fieldset');
+    for (var i = 0; i < filtersElements.length; i++) {
+      filtersElements[i].disabled = !state;
+    }
   };
 
   // функция, фильтрующая массив по выбранному пользователем типу жилья
@@ -76,7 +117,7 @@
 
   // функция, фильтрующая массив по преимуществам, выбранных пользователем
   var filterByFeatures = function (array) {
-    var selectedValue = activeFilters[filterFeauters];
+    var selectedValue = activeFilters[filterFeatures];
     if (!selectedValue.length) {
       return array;
     }
@@ -139,8 +180,8 @@
     var selectedFilterType = e.target.name;
     activeFilters[selectedFilterType] = value;
 
-    if (selectedFilterType === filterFeauters) {
-      var checkboxesSelector = '.map__features [name="' + filterFeauters + '"]:checked';
+    if (selectedFilterType === filterFeatures) {
+      var checkboxesSelector = '.map__features [name="' + filterFeatures + '"]:checked';
       activeFilters[selectedFilterType] = getCheckedBoxesValues(document.querySelectorAll(checkboxesSelector));
     }
 

@@ -7,19 +7,19 @@
     x: 570,
     y: 375
   };
-  var SIMILAR_PINS_SELECTOR = '.map__pin:not(.map__pin--main)';
-  var MAIN_PIN_SELECTOR = '.map__pin--main';
-  var ACTIVE_PIN_CLASS = 'map__pin--active';
+  var similarPinsSelector = '.map__pin:not(.map__pin--main)';
+  var mainPinSelector = '.map__pin--main';
+  var activePinClass = 'map__pin--active';
 
   // функция, которая задаёт активное состояние пину
   var activatePin = function (pinElement) {
-    pinElement.classList.add(ACTIVE_PIN_CLASS);
+    pinElement.classList.add(activePinClass);
   };
 
   // функция, которая деактивирует состояние пина
   window.deactivateAllPins = function () {
-    document.querySelectorAll(SIMILAR_PINS_SELECTOR).forEach(function (pinElement) {
-      pinElement.classList.remove(ACTIVE_PIN_CLASS);
+    document.querySelectorAll(similarPinsSelector).forEach(function (pinElement) {
+      pinElement.classList.remove(activePinClass);
     });
   };
 
@@ -35,7 +35,7 @@
 
   // функция, возвращающая пин в исходное положение
   window.resetMainPinPosition = function () {
-    window.utils.moveElement(document.querySelector(MAIN_PIN_SELECTOR), MAIN_PIN_START_POSITION.x, MAIN_PIN_START_POSITION.y);
+    window.utils.moveElement(document.querySelector(mainPinSelector), MAIN_PIN_START_POSITION.x, MAIN_PIN_START_POSITION.y);
     setAddressFieldValue(MAIN_PIN_START_POSITION.x, MAIN_PIN_START_POSITION.y);
   };
 
@@ -72,7 +72,7 @@
 
   // функция, удаляющая пины, за исключением главного пина
   window.removeMapPins = function () {
-    window.utils.removeElements(document.querySelectorAll(SIMILAR_PINS_SELECTOR));
+    window.utils.removeElements(document.querySelectorAll(similarPinsSelector));
   };
 
   // сгенерировать dom-елементы пинов и отобразить на карте
@@ -100,13 +100,13 @@
       y: e.clientY
     };
     var xBoundaries = document.querySelector('.map').getBoundingClientRect().width - MAIN_PIN_WIDTH;
-    var dragged = false;
+    var isDragged = false;
 
     // обработчик события для перестаскивания главного пина
     var onMouseMove = function (moveEvt) {
       moveEvt.preventDefault();
 
-      dragged = true;
+      isDragged = true;
       var shift = {
         x: startCoords.x - moveEvt.clientX,
         y: startCoords.y - moveEvt.clientY
@@ -119,8 +119,11 @@
 
       var positionY = pinElement.offsetTop - shift.y;
       var positionX = pinElement.offsetLeft - shift.x;
+      var boundariesYMin = window.consts.COORDINATES_Y_MIN - MAIN_PIN_HEIGHT;
+      var boundariesYMax = window.consts.COORDINATES_Y_MAX - MAIN_PIN_HEIGHT;
 
-      if (positionY >= window.COORDINATES_Y_MIN && positionY <= window.COORDINATES_Y_MAX && positionX <= xBoundaries && positionX >= 0) {
+      if (positionY >= boundariesYMin && positionY <= boundariesYMax && positionX <= xBoundaries && positionX >= 0) {
+
         window.utils.moveElement(pinElement, positionX, positionY);
         setAddressFieldValue(positionX, positionY);
       }
@@ -131,7 +134,7 @@
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
 
-      if (dragged) {
+      if (isDragged) {
         var onClickPreventDefault = function (evt) {
           evt.preventDefault();
           pinElement.removeEventListener('click', onClickPreventDefault);
@@ -156,7 +159,7 @@
     }
   };
 
-  var pinElement = document.querySelector(MAIN_PIN_SELECTOR);
+  var pinElement = document.querySelector(mainPinSelector);
   pinElement.addEventListener('mousedown', onPinMousedown);
   pinElement.addEventListener('keydown', onMainPinKeydown);
 

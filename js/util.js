@@ -36,6 +36,7 @@
     window.toggleFieldset(state);
     window.toggleFilters(state);
     window.toggleForm(state);
+    window.resetAllFilters();
   };
 
   // функция, изменяющая позиционирование элемента
