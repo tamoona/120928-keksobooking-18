@@ -3,12 +3,14 @@
 (function () {
   var HIGH_PRICE = 50000;
   var LOW_PRICE = 10000;
+  var DEBOUNCE_DELAY = 500;
   var defaultSelectValue = 'any';
   var filterFeatures = 'features';
   var filterHousingType = 'housing-type';
   var filterHousingPrice = 'housing-price';
   var filterHousingRooms = 'housing-rooms';
   var filterHousingGuests = 'housing-guests';
+  var optimizedDataLoad = window.utils.debounce(window.loadPinData, DEBOUNCE_DELAY);
 
   // функция, возвращающая первоначальное состояние фильтров
   var getDefaultFilters = function () {
@@ -188,13 +190,11 @@
     var onSuccess = function (data) {
       var validPins = filterData(filterValidOffers(data));
       window.renderMapPins(getMaxPins(validPins));
-      window.toggleFilters(true);
     };
 
     window.removeCard();
     window.deactivateAllPins();
-    window.toggleFilters(false);
-    window.loadPinData(onSuccess, window.openErrorModal);
+    optimizedDataLoad(onSuccess, window.openErrorModal);
   };
 
   document.querySelector('#housing-type').addEventListener('change', onFilterChange);

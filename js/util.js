@@ -63,6 +63,29 @@
     }
   };
 
+  // Возвращает функцию, которая не будет срабатывать, пока продолжает вызываться.
+  // Она сработает только один раз через N миллисекунд после последнего вызова.
+  // Если ей передан аргумент `isImmediate`, то она будет вызвана один раз сразу после
+  // первого запуска.
+  var debounce = function (cb, wait, isImmediate) {
+    var timeout;
+    return function () {
+      var args = arguments;
+      var later = function () {
+        timeout = null;
+        if (!isImmediate) {
+          cb.apply(cb, args);
+        }
+      };
+      var callNow = isImmediate && !timeout;
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
+      if (callNow) {
+        cb.apply(cb, args);
+      }
+    };
+  };
+
   window.utils = {
     setFieldValue: setFieldValue,
     removeElement: removeElement,
@@ -72,6 +95,7 @@
     moveElement: moveElement,
     getElementXY: getElementXY,
     setDataOrRemoveElement: setDataOrRemoveElement,
-    setChildrenOrRemoveElement: setChildrenOrRemoveElement
+    setChildrenOrRemoveElement: setChildrenOrRemoveElement,
+    debounce: debounce
   };
 })();
