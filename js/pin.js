@@ -3,6 +3,7 @@
 (function () {
   var MAIN_PIN_HEIGHT = 65;
   var MAIN_PIN_WIDTH = 65;
+  var MAIN_PIN_TIP_HEIGHT = 22;
   var MAIN_PIN_START_POSITION = {
     x: 570,
     y: 375
@@ -41,15 +42,15 @@
   };
 
   // функция, формирующая адрес
-  var getAddress = function (x, y, isInitial) {
+  var getAddress = function (x, y, isPinActive) {
     var xPosition = x + MAIN_PIN_WIDTH / 2;
-    var yPosition = y + (isInitial ? MAIN_PIN_HEIGHT / 2 : MAIN_PIN_HEIGHT);
+    var yPosition = y + (isPinActive ? MAIN_PIN_HEIGHT / 2 : MAIN_PIN_HEIGHT + MAIN_PIN_TIP_HEIGHT);
     return Math.round(xPosition) + ', ' + Math.round(yPosition);
   };
 
   // функция, утсанавливающая значение поля "адрес"
-  var setAddressFieldValue = function (x, y, isInitial) {
-    window.utils.setFieldValue(document.querySelector('#address'), getAddress(x, y, isInitial));
+  var setAddressFieldValue = function (x, y, isPinActive) {
+    window.utils.setFieldValue(document.querySelector('#address'), getAddress(x, y, isPinActive));
   };
 
   // функция, возвращающая пин в исходное положение
@@ -138,8 +139,8 @@
 
       var positionY = pinElement.offsetTop - shift.y;
       var positionX = pinElement.offsetLeft - shift.x;
-      var boundariesYMin = window.consts.COORDINATES_Y_MIN - MAIN_PIN_HEIGHT;
-      var boundariesYMax = window.consts.COORDINATES_Y_MAX - MAIN_PIN_HEIGHT;
+      var boundariesYMin = window.consts.COORDINATES_Y_MIN - MAIN_PIN_HEIGHT - MAIN_PIN_TIP_HEIGHT;
+      var boundariesYMax = window.consts.COORDINATES_Y_MAX - MAIN_PIN_HEIGHT - MAIN_PIN_TIP_HEIGHT;
 
       if (positionY >= boundariesYMin && positionY <= boundariesYMax && positionX <= xBoundaries && positionX >= 0) {
 
