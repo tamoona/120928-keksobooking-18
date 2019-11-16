@@ -9,18 +9,21 @@
   };
   var similarPinsSelector = '.map__pin:not(.map__pin--main)';
   var mainPinSelector = '.map__pin--main';
-  var activePinClass = 'map__pin--active';
+  var activePinSelector = '.map__pin--active';
 
   // функция, которая задаёт активное состояние пину
   var activatePin = function (pinElement) {
-    pinElement.classList.add(activePinClass);
+    pinElement.classList.add(activePinSelector.slice(1));
+  };
+
+  // функция, которая задаёт неактивное состояние пину
+  var deactivatePin = function (pinElement) {
+    pinElement.classList.remove(activePinSelector.slice(1));
   };
 
   // функция, которая деактивирует состояние пина
   window.deactivateAllPins = function () {
-    document.querySelectorAll(similarPinsSelector).forEach(function (pinElement) {
-      pinElement.classList.remove(activePinClass);
-    });
+    document.querySelectorAll(similarPinsSelector).forEach(deactivatePin);
   };
 
   // функция, формирующая адрес
