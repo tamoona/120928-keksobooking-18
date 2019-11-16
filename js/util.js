@@ -30,15 +30,6 @@
     element.value = value;
   };
 
-  // функция, которая переключает состояние страницы
-  var togglePage = function (state) {
-    window.toggleMap(state);
-    window.toggleFieldset(state);
-    window.toggleFilters(state);
-    window.toggleForm(state);
-    window.resetAllFilters();
-  };
-
   // функция, изменяющая позиционирование элемента
   var moveElement = function (element, x, y) {
     element.style.top = y + 'px';
@@ -78,7 +69,6 @@
     removeElements: removeElements,
     getSelectedValue: getSelectedValue,
     setSelectValue: setSelectValue,
-    togglePage: togglePage,
     moveElement: moveElement,
     getElementXY: getElementXY,
     setDataOrRemoveElement: setDataOrRemoveElement,

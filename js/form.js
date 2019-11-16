@@ -141,7 +141,7 @@
     var formData = new FormData(e.target);
     var onSuccess = function () {
       window.openSuccessModal();
-      window.utils.togglePage(false);
+      window.togglePage(false);
     };
     var onError = function () {
       window.openErrorModal(window.closeErrorModal);
@@ -160,7 +160,7 @@
   // обработчик клика на нажатие кнопки 'очистить'
   var onResetButtonClick = function (e) {
     e.preventDefault();
-    window.utils.togglePage(false);
+    window.togglePage(false);
   };
 
   setValidGuestValue();

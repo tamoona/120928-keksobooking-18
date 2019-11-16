@@ -146,14 +146,14 @@
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
 
-    window.utils.togglePage(true);
+    window.togglePage(true);
     setAddressFieldValue(staticStartCoords.x, staticStartCoords.y);
   };
 
   // обработчик события для пина на карте, при нажатии клавиши ENTER
   var onMainPinKeydown = function (e) {
     if (e.keyCode === window.consts.ENTER_KEY_NUMBER) {
-      window.utils.togglePage(true);
+      window.togglePage(true);
       var staticStartCoords = window.utils.getElementXY(pinElement);
       setAddressFieldValue(staticStartCoords.x, staticStartCoords.y);
     }
