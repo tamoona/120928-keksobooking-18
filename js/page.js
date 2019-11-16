@@ -11,10 +11,9 @@
     }
 
     isPageActivated = isPageActive;
-
-    window.toggleMap(isPageActive);
-    window.toggleFieldset(isPageActive);
     window.toggleForm(isPageActive);
+    window.toggleFieldset(isPageActive);
+    window.toggleMap(isPageActive);
     window.resetAllFilters();
   };
 })();
