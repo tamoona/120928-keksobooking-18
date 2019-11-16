@@ -9,6 +9,7 @@
   var FLAT_PRICE = 1000;
   var HOUSE_PRICE = 5000;
   var PALACE_PRICE = 10000;
+  var PRICE_MAX = 1000000;
   var form = document.querySelector('.ad-form');
 
   // отключение поля «Адреса»
@@ -39,6 +40,7 @@
   var validatePrice = function () {
     var priceInput = document.querySelector('input[name="price"]');
     priceInput.required = true;
+    priceInput.max = PRICE_MAX;
 
     switch (houseType.value) {
       case 'bungalo':
