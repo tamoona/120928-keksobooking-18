@@ -190,6 +190,7 @@
     deactivateAllPins: deactivateAllPins,
     removeMapPins: removeMapPins,
     renderMapPins: renderMapPins,
-    resetMainPinPosition: resetMainPinPosition
+    resetMainPinPosition: resetMainPinPosition,
+    pinData: []
   };
 })();

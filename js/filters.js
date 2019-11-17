@@ -10,7 +10,9 @@
   var filterHousingPrice = 'housing-price';
   var filterHousingRooms = 'housing-rooms';
   var filterHousingGuests = 'housing-guests';
-  var optimizedDataLoad = window.utils.debounce(window.backend.loadPinData, DEBOUNCE_DELAY);
+  var optimizedRender = window.utils.debounce(function (data) {
+    window.pin.renderMapPins(getMaxPins(filterData(filterValidOffers(data))));
+  }, DEBOUNCE_DELAY);
 
   // функция, возвращающая первоначальное состояние фильтров
   var getDefaultFilters = function () {
@@ -187,14 +189,9 @@
       activeFilters[selectedFilterType] = getCheckedBoxesValues(document.querySelectorAll(checkboxesSelector));
     }
 
-    var onSuccess = function (data) {
-      var validPins = filterData(filterValidOffers(data));
-      window.pin.renderMapPins(getMaxPins(validPins));
-    };
-
+    optimizedRender(window.pin.pinData);
     window.card.removeCard();
     window.pin.deactivateAllPins();
-    optimizedDataLoad(onSuccess, window.modal.openErrorModal);
   };
 
   document.querySelector('#housing-type').addEventListener('change', onFilterChange);

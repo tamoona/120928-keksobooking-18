@@ -14,6 +14,7 @@
     }
 
     var onSuccess = function (pinData) {
+      window.pin.pinData = pinData;
       window.pin.renderMapPins(window.filters.getMaxPins(window.filters.filterValidOffers(pinData)));
       window.filters.toggleFilters(true);
     };
