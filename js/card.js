@@ -3,6 +3,8 @@
 (function () {
   // функция, которая убирает карточку объявления
   var removeCard = function () {
+    window.pin.deactivateAllPins();
+    window.removeEventListener('keydown', onCardKeydown);
     window.utils.removeElements(document.querySelectorAll('.map .map__card'));
   };
 
@@ -12,8 +14,6 @@
       removeCard();
     }
   };
-
-  window.addEventListener('keydown', onCardKeydown);
 
   // функция, возвращающая читаемый тип жилья
   var getReadableOfferType = function (type) {
@@ -100,15 +100,16 @@
     var cardTemplate = document.querySelector('#card')
       .content;
     var cardElement = updateCard(cardTemplate.cloneNode(true), offer);
+    window.addEventListener('keydown', onCardKeydown);
     document.querySelector('.map').insertBefore(cardElement, document.querySelector('.map__filters-container'));
+    return cardElement;
   };
 
   // вспомогательная функция для перерисовки карты на основе переданных данных
   var openNewCard = function (data) {
     removeCard();
-    renderCard(data);
-    var popup = document.querySelector('.map__card');
-    var closePopupButton = popup.querySelector('.popup__close');
+    var cardElement = renderCard(data);
+    var closePopupButton = cardElement.querySelector('.popup__close');
 
     closePopupButton.addEventListener('click', removeCard);
   };
