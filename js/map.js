@@ -1,9 +1,11 @@
 'use strict';
 
 (function () {
+  var mapElement = document.querySelector('.map');
+
   // функция, переключающая состояние карты
   var toggleMap = function (isMapActive) {
-    document.querySelector('.map').classList.toggle('map--faded', !isMapActive);
+    mapElement.classList.toggle('map--faded', !isMapActive);
 
     // ранний возврат из функции для уменьшения количества уровней вложенности при отображении карты и пинов
     if (!isMapActive) {
@@ -27,7 +29,13 @@
     window.backend.loadPinData(onSuccess, onError);
   };
 
+  var getMapWidth = function () {
+    return mapElement.getBoundingClientRect().width;
+  };
+
   window.map = {
-    toggleMap: toggleMap
+    toggleMap: toggleMap,
+    getMapWidth: getMapWidth,
+    mapElement: mapElement
   };
 })();

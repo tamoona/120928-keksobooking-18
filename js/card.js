@@ -5,7 +5,7 @@
   var removeCard = function () {
     window.pin.deactivateAllPins();
     window.removeEventListener('keydown', onCardKeydown);
-    window.utils.removeElements(document.querySelectorAll('.map .map__card'));
+    window.utils.removeElements(window.map.mapElement.querySelectorAll('.map__card'));
   };
 
   // обработчик закрытия карточки с подробной информацией по нажатию клавиши Esc
@@ -101,7 +101,7 @@
       .content;
     var cardElement = updateCard(cardTemplate.cloneNode(true), offer);
     window.addEventListener('keydown', onCardKeydown);
-    document.querySelector('.map').insertBefore(cardElement, document.querySelector('.map__filters-container'));
+    window.map.mapElement.insertBefore(cardElement, document.querySelector('.map__filters-container'));
     return cardElement;
   };
 

@@ -1,10 +1,14 @@
 'use strict';
 
 (function () {
+  var mainElement = document.querySelector('main');
+  var successModal = document.querySelector('#success');
+  var errorModal = document.querySelector('#error');
+
   // закрытие окна ошибки
   var closeErrorModal = function () {
     window.addEventListener('keydown', onErrorModalKeydown);
-    window.utils.removeElement(document.querySelector('main .error'));
+    window.utils.removeElement(mainElement.querySelector('.error'));
   };
 
   // обработчик события при нажатии клавиши для окна с ошибкой
@@ -16,28 +20,28 @@
 
   // открытие окна ошибки
   var openErrorModal = function (onResetButtonClick) {
-    var errorModalTemplate = document.querySelector('#error').content.cloneNode(true);
-    var errorModal = errorModalTemplate.querySelector('.error');
+    var errorModalTemplate = errorModal.content.cloneNode(true);
+    var errorModalContent = errorModalTemplate.querySelector('.error');
 
     var onErrorModalClick = function (e) {
-      if (e.target === errorModal) {
+      if (e.target === errorModalContent) {
         closeErrorModal();
       }
     };
 
     if (onResetButtonClick) {
-      errorModalTemplate.querySelector('.error__button').addEventListener('click', onResetButtonClick);
+      errorModalContent.querySelector('.error__button').addEventListener('click', onResetButtonClick);
     }
 
-    errorModal.addEventListener('click', onErrorModalClick);
+    errorModalContent.addEventListener('click', onErrorModalClick);
     window.addEventListener('keydown', onErrorModalKeydown);
-    document.querySelector('main').append(errorModalTemplate);
+    mainElement.append(errorModalContent);
   };
 
   // закрытие окна успешного создания объявления
   var closeSuccessModal = function () {
     window.addEventListener('keydown', onSuccessModalKeydown);
-    window.utils.removeElement(document.querySelector('main .success'));
+    window.utils.removeElement(mainElement.querySelector('.success'));
   };
 
   // обработчик события при нажатии клавиши для окна успеха
@@ -49,11 +53,10 @@
 
   // открытие окна успешного создания объявления
   var openSuccessModal = function () {
-    var successModalTemplate = document.querySelector('#success').content.cloneNode(true);
+    var successModalTemplate = successModal.content.cloneNode(true);
     successModalTemplate.querySelector('.success').addEventListener('click', closeSuccessModal);
-
     window.addEventListener('keydown', onSuccessModalKeydown);
-    document.querySelector('main').append(successModalTemplate);
+    mainElement.append(successModalTemplate);
   };
 
   window.modal = {

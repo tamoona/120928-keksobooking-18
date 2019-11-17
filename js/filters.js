@@ -10,6 +10,12 @@
   var filterHousingPrice = 'housing-price';
   var filterHousingRooms = 'housing-rooms';
   var filterHousingGuests = 'housing-guests';
+  var filterElements = document.querySelectorAll('.map__filters select, .map__filters fieldset');
+  var housingTypeFilter = document.querySelector('#housing-type');
+  var priceFilter = document.querySelector('#housing-price');
+  var roomFilter = document.querySelector('#housing-rooms');
+  var guestFilter = document.querySelector('#housing-guests');
+  var featureFilter = document.querySelector('#housing-features');
   var optimizedRender = window.utils.debounce(function (data) {
     window.pin.renderMapPins(getMaxPins(filterData(filterValidOffers(data))));
   }, DEBOUNCE_DELAY);
@@ -48,7 +54,7 @@
         continue;
       }
       if (key === filterFeatures) {
-        resetCheckboxFilter(document.querySelectorAll('.map__checkbox:checked'));
+        resetCheckboxFilter(featureFilter.querySelectorAll('.map__checkbox:checked'));
       } else {
         var selector = '[name="' + key + '"]';
         resetSelectFilter(document.querySelector(selector));
@@ -58,8 +64,7 @@
 
   // функция, переключающая активное состояние формы с фильтрами
   var toggleFilters = function (areFiltersActive) {
-    var filtersElements = document.querySelectorAll('.map__filters select, .map__filters fieldset');
-    filtersElements.forEach(function (filterElement) {
+    filterElements.forEach(function (filterElement) {
       filterElement.disabled = !areFiltersActive;
     });
   };
@@ -194,11 +199,11 @@
     window.pin.deactivateAllPins();
   };
 
-  document.querySelector('#housing-type').addEventListener('change', onFilterChange);
-  document.querySelector('#housing-price').addEventListener('change', onFilterChange);
-  document.querySelector('#housing-rooms').addEventListener('change', onFilterChange);
-  document.querySelector('#housing-guests').addEventListener('change', onFilterChange);
-  document.querySelector('#housing-features').addEventListener('change', onFilterChange);
+  housingTypeFilter.addEventListener('change', onFilterChange);
+  priceFilter.addEventListener('change', onFilterChange);
+  roomFilter.addEventListener('change', onFilterChange);
+  guestFilter.addEventListener('change', onFilterChange);
+  featureFilter.addEventListener('change', onFilterChange);
 
   window.filters = {
     filterValidOffers: filterValidOffers,

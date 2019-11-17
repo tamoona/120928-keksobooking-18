@@ -8,9 +8,8 @@
     x: 570,
     y: 375
   };
-  var similarPinsSelector = '.map__pin:not(.map__pin--main)';
-  var mainPinSelector = '.map__pin--main';
-  var activePinSelector = '.map__pin--active';
+  var mainPinElement = document.querySelector('.map__pin--main');
+  var pinContainer = document.querySelector('.map__pins');
 
   // функция, изменяющая позиционирование элемента
   var moveElement = function (element, x, y) {
@@ -26,19 +25,29 @@
     };
   };
 
+  // функция, которая переключает состояние пина
+  var togglePin = function (element, isActive) {
+    var activePinClass = 'map__pin--active';
+    if (isActive) {
+      element.classList.add(activePinClass);
+    } else {
+      element.classList.remove(activePinClass);
+    }
+  };
+
   // функция, которая задаёт активное состояние пину
-  var activatePin = function (pinElement) {
-    pinElement.classList.add(activePinSelector.slice(1));
+  var activatePin = function (element) {
+    togglePin(element, true);
   };
 
   // функция, которая задаёт неактивное состояние пину
-  var deactivatePin = function (pinElement) {
-    pinElement.classList.remove(activePinSelector.slice(1));
+  var deactivatePin = function (element) {
+    togglePin(element, false);
   };
 
   // функция, которая деактивирует состояние пина
   var deactivateAllPins = function () {
-    document.querySelectorAll(similarPinsSelector).forEach(deactivatePin);
+    document.querySelectorAll('.map__pin:not(.map__pin--main)').forEach(deactivatePin);
   };
 
   // функция, формирующая адрес
@@ -48,15 +57,10 @@
     return Math.round(xPosition) + ', ' + Math.round(yPosition);
   };
 
-  // функция, утсанавливающая значение поля "адрес"
-  var setAddressFieldValue = function (x, y, isPinActive) {
-    window.utils.setFieldValue(document.querySelector('#address'), getAddress(x, y, isPinActive));
-  };
-
   // функция, возвращающая пин в исходное положение
   var resetMainPinPosition = function () {
-    moveElement(document.querySelector(mainPinSelector), mainPinStartPosition.x, mainPinStartPosition.y);
-    setAddressFieldValue(mainPinStartPosition.x, mainPinStartPosition.y, true);
+    moveElement(mainPinElement, mainPinStartPosition.x, mainPinStartPosition.y);
+    window.form.setAddressFieldValue(getAddress(mainPinStartPosition.x, mainPinStartPosition.y, true));
   };
 
   // заполнить пин данными
@@ -92,13 +96,12 @@
 
   // функция, удаляющая пины, за исключением главного пина
   var removeMapPins = function () {
-    window.utils.removeElements(document.querySelectorAll(similarPinsSelector));
+    window.utils.removeElements(document.querySelectorAll('.map__pin:not(.map__pin--main)'));
   };
 
   // сгенерировать dom-елементы пинов и отобразить на карте
   var renderMapPins = function (offers) {
     removeMapPins();
-    var listElement = document.querySelector('.map__pins');
     var fragment = document.createDocumentFragment();
     var pinTemplate = document.querySelector('#pin')
       .content;
@@ -108,18 +111,18 @@
       fragment.appendChild(pinElement);
     });
 
-    listElement.appendChild(fragment);
+    pinContainer.appendChild(fragment);
   };
 
   // обработчик события для пина на карте, при нажатии мышкой
   var onPinMousedown = function (e) {
     e.preventDefault();
-    var staticStartCoords = getElementXY(pinElement);
+    var staticStartCoords = getElementXY(mainPinElement);
     var startCoords = {
       x: e.clientX,
       y: e.clientY
     };
-    var xBoundaries = document.querySelector('.map').getBoundingClientRect().width - MAIN_PIN_WIDTH;
+    var xBoundaries = window.map.getMapWidth() - MAIN_PIN_WIDTH;
     var isDragged = false;
 
     // обработчик события для перестаскивания главного пина
@@ -137,15 +140,15 @@
         y: moveEvt.clientY
       };
 
-      var positionY = pinElement.offsetTop - shift.y;
-      var positionX = pinElement.offsetLeft - shift.x;
+      var positionY = mainPinElement.offsetTop - shift.y;
+      var positionX = mainPinElement.offsetLeft - shift.x;
       var boundariesYMin = window.consts.COORDINATES_Y_MIN - MAIN_PIN_HEIGHT - MAIN_PIN_TIP_HEIGHT;
       var boundariesYMax = window.consts.COORDINATES_Y_MAX - MAIN_PIN_HEIGHT - MAIN_PIN_TIP_HEIGHT;
 
       if (positionY >= boundariesYMin && positionY <= boundariesYMax && positionX <= xBoundaries && positionX >= 0) {
 
-        moveElement(pinElement, positionX, positionY);
-        setAddressFieldValue(positionX, positionY);
+        moveElement(mainPinElement, positionX, positionY);
+        window.form.setAddressFieldValue(getAddress(positionX, positionY));
       }
     };
 
@@ -157,9 +160,9 @@
       if (isDragged) {
         var onMouseClick = function (evt) {
           evt.preventDefault();
-          pinElement.removeEventListener('click', onMouseClick);
+          mainPinElement.removeEventListener('click', onMouseClick);
         };
-        pinElement.addEventListener('click', onMouseClick);
+        mainPinElement.addEventListener('click', onMouseClick);
       }
     };
 
@@ -167,24 +170,22 @@
     document.addEventListener('mouseup', onMouseUp);
 
     window.page.togglePage(true);
-    setAddressFieldValue(staticStartCoords.x, staticStartCoords.y);
+    window.form.setAddressFieldValue(getAddress(staticStartCoords.x, staticStartCoords.y));
   };
 
   // обработчик события для пина на карте, при нажатии клавиши ENTER
   var onMainPinKeydown = function (e) {
     if (e.keyCode === window.consts.ENTER_KEY_NUMBER) {
       window.page.togglePage(true);
-      var staticStartCoords = getElementXY(pinElement);
-      setAddressFieldValue(staticStartCoords.x, staticStartCoords.y);
+      var staticStartCoords = getElementXY(mainPinElement);
+      window.form.setAddressFieldValue(getAddress(staticStartCoords.x, staticStartCoords.y));
     }
   };
 
-  var pinElement = document.querySelector(mainPinSelector);
+  mainPinElement.addEventListener('mousedown', onPinMousedown);
+  mainPinElement.addEventListener('keydown', onMainPinKeydown);
 
-  pinElement.addEventListener('mousedown', onPinMousedown);
-  pinElement.addEventListener('keydown', onMainPinKeydown);
-
-  setAddressFieldValue(mainPinStartPosition.x, mainPinStartPosition.y, true);
+  window.form.setAddressFieldValue(getAddress(mainPinStartPosition.x, mainPinStartPosition.y, true));
 
   window.pin = {
     deactivateAllPins: deactivateAllPins,

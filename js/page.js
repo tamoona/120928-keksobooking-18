@@ -9,7 +9,6 @@
     if (isPageActivated === isPageActive) {
       return;
     }
-
     isPageActivated = isPageActive;
     window.form.toggleForm(isPageActive);
     window.form.toggleFieldset(isPageActive);
