@@ -7,13 +7,13 @@
   };
 
   // обработчик закрытия карточки с подробной информацией по нажатию клавиши Esc
-  var closePopupButtonEsc = function (e) {
+  var onCardKeydown = function (e) {
     if (e.keyCode === window.consts.ESC_KEY_NUMBER) {
       window.removeCard();
     }
   };
 
-  window.addEventListener('keydown', closePopupButtonEsc);
+  window.addEventListener('keydown', onCardKeydown);
 
   // функция, возвращающая читаемый тип жилья
   var getReadableOfferType = function (type) {

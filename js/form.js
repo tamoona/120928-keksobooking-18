@@ -19,12 +19,12 @@
   };
 
   // добавить границу элементу, который сгенерировал событие
-  var setTargetBorder = function (e) {
+  var onFieldInvalid = function (e) {
     setCustomBorder(e.target);
   };
 
   // удалить границу у элемента, который сгенерировал событие, если он проходит проверку на валидность
-  var resetBorderIfTargetValid = function (e) {
+  var onFieldInput = function (e) {
     if (e.target.validity.valid) {
       resetCustomBorder(e.target);
     }
@@ -50,14 +50,14 @@
     titleInput.required = true;
   };
 
-  titleInput.addEventListener('input', resetBorderIfTargetValid);
-  titleInput.addEventListener('invalid', setTargetBorder);
+  titleInput.addEventListener('input', onFieldInput);
+  titleInput.addEventListener('invalid', onFieldInvalid);
 
   var priceInput = document.querySelector('input[name="price"]');
   var houseType = document.querySelector('select[name="type"]');
 
   // валидация для полей «Тип жилья» и «Цена за ночь»
-  var validateHouseTypeVsPrice = function () {
+  var onHouseTypeChange = function () {
     priceInput.required = true;
     priceInput.max = PRICE_MAX;
 
@@ -85,12 +85,12 @@
     }
   };
 
-  houseType.addEventListener('change', validateHouseTypeVsPrice);
-  priceInput.addEventListener('input', resetBorderIfTargetValid);
-  priceInput.addEventListener('invalid', setTargetBorder);
+  houseType.addEventListener('change', onHouseTypeChange);
+  priceInput.addEventListener('input', onFieldInput);
+  priceInput.addEventListener('invalid', onFieldInvalid);
 
   // валидация для полей «Время заезда» и «Время выезда» (синхронизированы)
-  var toggleTime = function (e) {
+  var onTimeInTimeOutChange = function (e) {
     var checkInTime = document.querySelector('select[name="timein"]');
     var checkOutTime = document.querySelector('select[name="timeout"]');
 
@@ -102,7 +102,7 @@
   };
 
   var timeFieldset = document.querySelector('.ad-form__element--time');
-  timeFieldset.addEventListener('change', toggleTime);
+  timeFieldset.addEventListener('change', onTimeInTimeOutChange);
 
   // функция, которая проверяет валидность количества гостей по отношению к количеству комнат
   var isGuestNumberValid = function (roomNumber, guestNumber) {
@@ -131,7 +131,7 @@
   };
 
   // функция, деактивирующая невалидное количество гостей
-  var disableInvalidGuestValues = function () {
+  var onDisableInvalidGuestValues = function () {
     var roomField = document.querySelector('#room_number');
     var roomNumber = parseInt(window.utils.getSelectedValue(roomField), 10);
     var guestSelectOptions = document.querySelectorAll('#capacity option');
@@ -178,7 +178,7 @@
   // функция, переключающая состояние формы
   window.resetForm = function () {
     form.reset();
-    disableInvalidGuestValues();
+    onDisableInvalidGuestValues();
     removePhotoPreviews();
     removeAvatarPreview();
   };
@@ -258,11 +258,11 @@
 
   setValidGuestValue();
   validateTitleInput();
-  validateHouseTypeVsPrice();
+  onHouseTypeChange();
   disableAddress();
 
-  document.querySelector('#room_number').addEventListener('change', disableInvalidGuestValues);
-  document.querySelector('#capacity').addEventListener('change', disableInvalidGuestValues);
+  document.querySelector('#room_number').addEventListener('change', onDisableInvalidGuestValues);
+  document.querySelector('#capacity').addEventListener('change', onDisableInvalidGuestValues);
   form.addEventListener('submit', onFormSubmit);
   document.querySelector('.ad-form__reset').addEventListener('click', onResetButtonClick);
   document.querySelector('.ad-form-header__input').addEventListener('change', onAvatarPreview);

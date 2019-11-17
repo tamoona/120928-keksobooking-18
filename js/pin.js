@@ -155,11 +155,11 @@
       document.removeEventListener('mouseup', onMouseUp);
 
       if (isDragged) {
-        var onClickPreventDefault = function (evt) {
+        var onMouseClick = function (evt) {
           evt.preventDefault();
-          pinElement.removeEventListener('click', onClickPreventDefault);
+          pinElement.removeEventListener('click', onMouseClick);
         };
-        pinElement.addEventListener('click', onClickPreventDefault);
+        pinElement.addEventListener('click', onMouseClick);
       }
     };
 
