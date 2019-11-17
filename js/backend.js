@@ -7,7 +7,7 @@
   var RESPONSE_OK = 200;
 
   // выполнение http-запроса
-  window.request = function (method, url, options) {
+  var request = function (method, url, options) {
     var xhr = new XMLHttpRequest();
 
     xhr.responseType = 'json';
@@ -32,11 +32,16 @@
     xhr.send(options.data);
   };
 
-  window.loadPinData = function (onSuccess, onError) {
-    window.request('GET', SERVER_URL, {onSuccess: onSuccess, onError: onError});
+  var loadPinData = function (onSuccess, onError) {
+    request('GET', SERVER_URL, {onSuccess: onSuccess, onError: onError});
   };
 
-  window.sendFormData = function (formData, onSuccess, onError) {
-    window.request('POST', SERVER_NEW_AD_URL, {onSuccess: onSuccess, onError: onError, data: formData});
+  var sendFormData = function (formData, onSuccess, onError) {
+    request('POST', SERVER_NEW_AD_URL, {onSuccess: onSuccess, onError: onError, data: formData});
+  };
+
+  window.backend = {
+    loadPinData: loadPinData,
+    sendFormData: sendFormData
   };
 })();

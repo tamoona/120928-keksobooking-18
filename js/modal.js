@@ -2,22 +2,22 @@
 
 (function () {
   // закрытие окна ошибки
-  window.closeErrorModal = function () {
+  var closeErrorModal = function () {
     window.utils.removeElement(document.querySelector('main .error'));
   };
 
   // открытие окна ошибки
-  window.openErrorModal = function (onResetButtonClick) {
+  var openErrorModal = function (onResetButtonClick) {
     var errorModalTemplate = document.querySelector('#error').content.cloneNode(true);
     var errorModal = errorModalTemplate.querySelector('.error');
     var onErrorModalClick = function (e) {
       if (e.target === errorModal) {
-        window.closeErrorModal();
+        closeErrorModal();
       }
     };
     var onErrorModalKeydown = function (e) {
       if (e.keyCode === window.consts.ESC_KEY_NUMBER) {
-        window.closeErrorModal();
+        closeErrorModal();
       }
     };
 
@@ -31,21 +31,28 @@
   };
 
   // закрытие окна успешного создания объявления
-  window.closeSuccessModal = function () {
+  var closeSuccessModal = function () {
     window.utils.removeElement(document.querySelector('main .success'));
   };
 
   // открытие окна успешного создания объявления
-  window.openSuccessModal = function () {
+  var openSuccessModal = function () {
     var successModalTemplate = document.querySelector('#success').content.cloneNode(true);
-    successModalTemplate.querySelector('.success').addEventListener('click', window.closeSuccessModal);
+    successModalTemplate.querySelector('.success').addEventListener('click', closeSuccessModal);
     var onSuccessModalKeydown = function (e) {
       if (e.keyCode === window.consts.ESC_KEY_NUMBER) {
-        window.closeSuccessModal();
+        closeSuccessModal();
       }
     };
 
     window.addEventListener('keydown', onSuccessModalKeydown);
     document.querySelector('main').append(successModalTemplate);
+  };
+
+  window.modal = {
+    closeErrorModal: closeErrorModal,
+    openErrorModal: openErrorModal,
+    closeSuccessModal: closeSuccessModal,
+    openSuccessModal: openSuccessModal
   };
 })();

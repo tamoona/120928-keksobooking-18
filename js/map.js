@@ -2,27 +2,31 @@
 
 (function () {
   // функция, переключающая состояние карты
-  window.toggleMap = function (isMapActive) {
+  var toggleMap = function (isMapActive) {
     document.querySelector('.map').classList.toggle('map--faded', !isMapActive);
 
     // ранний возврат из функции для уменьшения количества уровней вложенности при отображении карты и пинов
     if (!isMapActive) {
-      window.removeMapPins();
-      window.removeCard();
-      window.resetMainPinPosition();
+      window.pin.removeMapPins();
+      window.card.removeCard();
+      window.pin.resetMainPinPosition();
       return;
     }
 
     var onSuccess = function (pinData) {
-      window.renderMapPins(window.filters.getMaxPins(window.filters.filterValidOffers(pinData)));
-      window.toggleFilters(true);
+      window.pin.renderMapPins(window.filters.getMaxPins(window.filters.filterValidOffers(pinData)));
+      window.filters.toggleFilters(true);
     };
 
     var onError = function () {
-      window.openErrorModal(window.closeErrorModal);
+      window.modal.openErrorModal(window.modal.closeErrorModal);
     };
 
-    window.toggleFilters(false);
-    window.loadPinData(onSuccess, onError);
+    window.filters.toggleFilters(false);
+    window.backend.loadPinData(onSuccess, onError);
+  };
+
+  window.map = {
+    toggleMap: toggleMap
   };
 })();

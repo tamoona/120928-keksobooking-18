@@ -10,7 +10,7 @@
   var filterHousingPrice = 'housing-price';
   var filterHousingRooms = 'housing-rooms';
   var filterHousingGuests = 'housing-guests';
-  var optimizedDataLoad = window.utils.debounce(window.loadPinData, DEBOUNCE_DELAY);
+  var optimizedDataLoad = window.utils.debounce(window.backend.loadPinData, DEBOUNCE_DELAY);
 
   // функция, возвращающая первоначальное состояние фильтров
   var getDefaultFilters = function () {
@@ -39,7 +39,7 @@
   };
 
   // функция, сбрасывающая состояние всех фильтров
-  window.resetAllFilters = function () {
+  var resetAllFilters = function () {
     activeFilters = getDefaultFilters();
     for (var key in activeFilters) {
       if (!Object.prototype.hasOwnProperty.call(activeFilters, key)) {
@@ -55,7 +55,7 @@
   };
 
   // функция, переключающая активное состояние формы с фильтрами
-  window.toggleFilters = function (areFiltersActive) {
+  var toggleFilters = function (areFiltersActive) {
     var filtersElements = document.querySelectorAll('.map__filters select, .map__filters fieldset');
     filtersElements.forEach(function (filterElement) {
       filterElement.disabled = !areFiltersActive;
@@ -189,12 +189,12 @@
 
     var onSuccess = function (data) {
       var validPins = filterData(filterValidOffers(data));
-      window.renderMapPins(getMaxPins(validPins));
+      window.pin.renderMapPins(getMaxPins(validPins));
     };
 
-    window.removeCard();
-    window.deactivateAllPins();
-    optimizedDataLoad(onSuccess, window.openErrorModal);
+    window.card.removeCard();
+    window.pin.deactivateAllPins();
+    optimizedDataLoad(onSuccess, window.modal.openErrorModal);
   };
 
   document.querySelector('#housing-type').addEventListener('change', onFilterChange);
@@ -205,6 +205,8 @@
 
   window.filters = {
     filterValidOffers: filterValidOffers,
-    getMaxPins: getMaxPins
+    getMaxPins: getMaxPins,
+    resetAllFilters: resetAllFilters,
+    toggleFilters: toggleFilters
   };
 })();

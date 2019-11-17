@@ -2,14 +2,14 @@
 
 (function () {
   // функция, которая убирает карточку объявления
-  window.removeCard = function () {
+  var removeCard = function () {
     window.utils.removeElements(document.querySelectorAll('.map .map__card'));
   };
 
   // обработчик закрытия карточки с подробной информацией по нажатию клавиши Esc
   var onCardKeydown = function (e) {
     if (e.keyCode === window.consts.ESC_KEY_NUMBER) {
-      window.removeCard();
+      removeCard();
     }
   };
 
@@ -34,22 +34,26 @@
   // генерирует фрагмент документа, содержащий фотографии
   var generateOfferPhotos = function (photoTemplate, photos) {
     var fragment = document.createDocumentFragment();
+
     photos.forEach(function (photo) {
       var photoElementCopy = photoTemplate.cloneNode(true);
       photoElementCopy.src = photo;
       fragment.appendChild(photoElementCopy);
     });
+
     return fragment;
   };
 
   // генерирует фрагмент документа, содержащий иконки преимуществ
   var generateOfferFeatures = function (features) {
     var fragment = document.createDocumentFragment();
+
     features.forEach(function (feature) {
       var featureElement = document.createElement('li');
       featureElement.classList.add('popup__feature', 'popup__feature--' + feature);
       fragment.appendChild(featureElement);
     });
+
     return fragment;
   };
 
@@ -100,13 +104,18 @@
   };
 
   // вспомогательная функция для перерисовки карты на основе переданных данных
-  window.openNewCard = function (data) {
-    window.removeCard();
+  var openNewCard = function (data) {
+    removeCard();
     renderCard(data);
     var popup = document.querySelector('.map__card');
     var closePopupButton = popup.querySelector('.popup__close');
 
-    closePopupButton.addEventListener('click', window.removeCard);
+    closePopupButton.addEventListener('click', removeCard);
+  };
+
+  window.card = {
+    openNewCard: openNewCard,
+    removeCard: removeCard
   };
 
 })();

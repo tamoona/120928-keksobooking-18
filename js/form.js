@@ -176,7 +176,7 @@
   };
 
   // функция, переключающая состояние формы
-  window.resetForm = function () {
+  var resetForm = function () {
     form.reset();
     onDisableInvalidGuestValues();
     removePhotoPreviews();
@@ -184,9 +184,9 @@
   };
 
   // функция, переключающая состояние формы
-  window.toggleForm = function (isFormActive) {
+  var toggleForm = function (isFormActive) {
     form.classList.toggle('ad-form--disabled', !isFormActive);
-    window.resetForm();
+    resetForm();
   };
 
   // обработчик события, отменяюший действия формы по умолчанию
@@ -194,17 +194,17 @@
     e.preventDefault();
     var formData = new FormData(e.target);
     var onSuccess = function () {
-      window.openSuccessModal();
-      window.togglePage(false);
+      window.modal.openSuccessModal();
+      window.page.togglePage(false);
     };
     var onError = function () {
-      window.openErrorModal(window.closeErrorModal);
+      window.modal.openErrorModal(window.modal.closeErrorModal);
     };
-    window.sendFormData(formData, onSuccess, onError);
+    window.backend.sendFormData(formData, onSuccess, onError);
   };
 
   // функция, переключающая состояния полей
-  window.toggleFieldset = function (isFieldsetActive) {
+  var toggleFieldset = function (isFieldsetActive) {
     var fieldsetElements = document.querySelectorAll('.ad-form fieldset');
     fieldsetElements.forEach(function (fieldsetElement) {
       fieldsetElement.disabled = !isFieldsetActive;
@@ -214,7 +214,7 @@
   // обработчик клика на нажатие кнопки 'очистить'
   var onResetButtonClick = function (e) {
     e.preventDefault();
-    window.togglePage(false);
+    window.page.togglePage(false);
   };
 
   // функция, обрабатывающая превью аватарки
@@ -267,4 +267,10 @@
   document.querySelector('.ad-form__reset').addEventListener('click', onResetButtonClick);
   document.querySelector('.ad-form-header__input').addEventListener('change', onAvatarPreview);
   document.querySelector('.ad-form__input').addEventListener('change', onPhotosPreview);
+
+  window.form = {
+    resetForm: resetForm,
+    toggleForm: toggleForm,
+    toggleFieldset: toggleFieldset
+  };
 })();
