@@ -4,7 +4,7 @@
   var MAIN_PIN_HEIGHT = 65;
   var MAIN_PIN_WIDTH = 65;
   var MAIN_PIN_TIP_HEIGHT = 22;
-  var MAIN_PIN_START_POSITION = {
+  var mainPinStartPosition = {
     x: 570,
     y: 375
   };
@@ -55,8 +55,8 @@
 
   // функция, возвращающая пин в исходное положение
   window.resetMainPinPosition = function () {
-    moveElement(document.querySelector(mainPinSelector), MAIN_PIN_START_POSITION.x, MAIN_PIN_START_POSITION.y);
-    setAddressFieldValue(MAIN_PIN_START_POSITION.x, MAIN_PIN_START_POSITION.y, true);
+    moveElement(document.querySelector(mainPinSelector), mainPinStartPosition.x, mainPinStartPosition.y);
+    setAddressFieldValue(mainPinStartPosition.x, mainPinStartPosition.y, true);
   };
 
   // заполнить пин данными
@@ -184,5 +184,5 @@
   pinElement.addEventListener('mousedown', onPinMousedown);
   pinElement.addEventListener('keydown', onMainPinKeydown);
 
-  setAddressFieldValue(MAIN_PIN_START_POSITION.x, MAIN_PIN_START_POSITION.y, true);
+  setAddressFieldValue(mainPinStartPosition.x, mainPinStartPosition.y, true);
 })();
