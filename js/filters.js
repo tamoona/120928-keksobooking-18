@@ -57,9 +57,9 @@
   // функция, переключающая активное состояние формы с фильтрами
   window.toggleFilters = function (areFiltersActive) {
     var filtersElements = document.querySelectorAll('.map__filters select, .map__filters fieldset');
-    for (var i = 0; i < filtersElements.length; i++) {
-      filtersElements[i].disabled = !areFiltersActive;
-    }
+    filtersElements.forEach(function (filterElement) {
+      filterElement.disabled = !areFiltersActive;
+    });
   };
 
   // функция, фильтрующая массив по выбранному пользователем типу жилья

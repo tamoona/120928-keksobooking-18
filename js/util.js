@@ -15,9 +15,7 @@
 
   // функция, удаляюшая элементы
   var removeElements = function (nodeList) {
-    for (var i = 0; i < nodeList.length; i++) {
-      removeElement(nodeList[i]);
-    }
+    nodeList.forEach(removeElement);
   };
 
   // функция, возвращающая значение выбранной опции у списка

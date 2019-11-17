@@ -136,11 +136,10 @@
     var roomNumber = parseInt(window.utils.getSelectedValue(roomField), 10);
     var guestSelectOptions = document.querySelectorAll('#capacity option');
 
-    for (var i = 0; i < guestSelectOptions.length; i++) {
-      var guestSelectOption = guestSelectOptions[i];
+    guestSelectOptions.forEach(function (guestSelectOption) {
       var guestSelectValue = parseInt(guestSelectOption.value, 10);
       guestSelectOption.disabled = !isGuestNumberValid(roomNumber, guestSelectValue);
-    }
+    });
 
     setValidGuestValue();
   };
@@ -161,9 +160,14 @@
   // функция, удаляющая все фотографии, за исключением дефолтной фотографии
   var removePhotoPreviews = function () {
     var photoPreviewElements = document.querySelectorAll('.ad-form__photo');
-    for (var i = 0; i < photoPreviewElements.length - 1; i++) {
-      photoPreviewElements[i].remove();
-    }
+    photoPreviewElements.forEach(function (photoPreviewElement, index) {
+      // ранний возврат, если передан последний элемент массива
+      if (index === photoPreviewElements.length - 1) {
+        return;
+      }
+
+      photoPreviewElement.remove();
+    });
   };
 
   // функция, удаляющая превью аватарки
@@ -202,9 +206,9 @@
   // функция, переключающая состояния полей
   window.toggleFieldset = function (isFieldsetActive) {
     var fieldsetElements = document.querySelectorAll('.ad-form fieldset');
-    for (var i = 0; i < fieldsetElements.length; i++) {
-      fieldsetElements[i].disabled = !isFieldsetActive;
-    }
+    fieldsetElements.forEach(function (fieldsetElement) {
+      fieldsetElement.disabled = !isFieldsetActive;
+    });
   };
 
   // обработчик клика на нажатие кнопки 'очистить'
@@ -235,13 +239,11 @@
     var files = e.target.files;
     removePhotoPreviews();
 
-    for (var i = 0; i < files.length; i++) {
-      var file = files[i];
-
+    Array.prototype.forEach.call(files, function (file) {
+      // ранний возврат, если переданный файл не является изображением
       if (!file.type.match('image')) {
-        continue;
+        return;
       }
-
       var reader = new FileReader();
 
       reader.addEventListener('load', function (readerEvt) {
@@ -251,7 +253,7 @@
       });
 
       reader.readAsDataURL(file);
-    }
+    });
   };
 
   setValidGuestValue();
