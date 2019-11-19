@@ -51,14 +51,15 @@
     }
   };
 
-  var onSuccessModalClose = function () {
+  // обработчик события при клике на модальное окно
+  var onSuccessModalClick = function () {
     closeSuccess();
   };
 
   // открытие окна успешного создания объявления
   var openSuccess = function () {
     var successModalTemplate = successModal.content.cloneNode(true);
-    successModalTemplate.querySelector('.success').addEventListener('click', onSuccessModalClose);
+    successModalTemplate.querySelector('.success').addEventListener('click', onSuccessModalClick);
     window.addEventListener('keydown', onSuccessModalKeydown);
     mainElement.append(successModalTemplate);
   };

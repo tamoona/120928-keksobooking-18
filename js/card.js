@@ -105,13 +105,18 @@
     return cardElement;
   };
 
+  // обработчик события при клике на кнопку закрытия
+  var onCloseButtonClick = function () {
+    remove();
+  };
+
   // вспомогательная функция для перерисовки карты на основе переданных данных
   var open = function (data) {
     remove();
     var cardElement = renderCard(data);
     var closePopupButton = cardElement.querySelector('.popup__close');
 
-    closePopupButton.addEventListener('click', remove);
+    closePopupButton.addEventListener('click', onCloseButtonClick);
   };
 
   window.card = {
