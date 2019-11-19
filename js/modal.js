@@ -7,7 +7,7 @@
 
   // закрытие окна ошибки
   var closeErrorModal = function () {
-    window.addEventListener('keydown', onErrorModalKeydown);
+    window.removeEventListener('keydown', onErrorModalKeydown);
     window.utils.removeElement(mainElement.querySelector('.error'));
   };
 
@@ -40,7 +40,7 @@
 
   // закрытие окна успешного создания объявления
   var closeSuccessModal = function () {
-    window.addEventListener('keydown', onSuccessModalKeydown);
+    window.removeEventListener('keydown', onSuccessModalKeydown);
     window.utils.removeElement(mainElement.querySelector('.success'));
   };
 
