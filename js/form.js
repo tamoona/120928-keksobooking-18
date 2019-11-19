@@ -172,7 +172,7 @@
   };
 
   // функция, переключающая состояние формы
-  var resetForm = function () {
+  var reset = function () {
     form.reset();
     onDisableInvalidGuestValues();
     removePhotoPreviews();
@@ -180,9 +180,9 @@
   };
 
   // функция, переключающая состояние формы
-  var toggleForm = function (isFormActive) {
+  var toggle = function (isFormActive) {
     form.classList.toggle('ad-form--disabled', !isFormActive);
-    resetForm();
+    reset();
   };
 
   // обработчик события, отменяюший действия формы по умолчанию
@@ -190,11 +190,11 @@
     e.preventDefault();
     var formData = new FormData(e.target);
     var onSuccess = function () {
-      window.modal.openSuccessModal();
-      window.page.togglePage(false);
+      window.modal.openSuccess();
+      window.page.toggle(false);
     };
     var onError = function () {
-      window.modal.openErrorModal(window.modal.closeErrorModal);
+      window.modal.openError(window.modal.closeError);
     };
     window.backend.sendFormData(formData, onSuccess, onError);
   };
@@ -210,7 +210,7 @@
   // обработчик клика на нажатие кнопки 'очистить'
   var onResetButtonClick = function (e) {
     e.preventDefault();
-    window.page.togglePage(false);
+    window.page.toggle(false);
   };
 
   // функция, обрабатывающая превью аватарки
@@ -273,8 +273,8 @@
   form.addEventListener('submit', onFormSubmit);
 
   window.form = {
-    resetForm: resetForm,
-    toggleForm: toggleForm,
+    reset: reset,
+    toggle: toggle,
     toggleFieldset: toggleFieldset,
     setAddressFieldValue: setAddressFieldValue
   };

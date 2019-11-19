@@ -2,16 +2,16 @@
 
 (function () {
   // функция, которая убирает карточку объявления
-  var removeCard = function () {
-    window.pin.deactivateAllPins();
+  var remove = function () {
+    window.pin.deactivateAll();
     window.removeEventListener('keydown', onCardKeydown);
-    window.utils.removeElements(window.map.mapElement.querySelectorAll('.map__card'));
+    window.utils.removeElements(window.map.element.querySelectorAll('.map__card'));
   };
 
   // обработчик закрытия карточки с подробной информацией по нажатию клавиши Esc
   var onCardKeydown = function (e) {
     if (e.keyCode === window.consts.ESC_KEY_NUMBER) {
-      removeCard();
+      remove();
     }
   };
 
@@ -101,22 +101,22 @@
       .content;
     var cardElement = updateCard(cardTemplate.cloneNode(true), offer);
     window.addEventListener('keydown', onCardKeydown);
-    window.map.mapElement.insertBefore(cardElement, document.querySelector('.map__filters-container'));
+    window.map.element.insertBefore(cardElement, document.querySelector('.map__filters-container'));
     return cardElement;
   };
 
   // вспомогательная функция для перерисовки карты на основе переданных данных
-  var openNewCard = function (data) {
-    removeCard();
+  var open = function (data) {
+    remove();
     var cardElement = renderCard(data);
     var closePopupButton = cardElement.querySelector('.popup__close');
 
-    closePopupButton.addEventListener('click', removeCard);
+    closePopupButton.addEventListener('click', remove);
   };
 
   window.card = {
-    openNewCard: openNewCard,
-    removeCard: removeCard
+    open: open,
+    remove: remove
   };
 
 })();

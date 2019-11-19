@@ -6,7 +6,7 @@
   var errorModal = document.querySelector('#error');
 
   // закрытие окна ошибки
-  var closeErrorModal = function () {
+  var closeError = function () {
     window.removeEventListener('keydown', onErrorModalKeydown);
     window.utils.removeElement(mainElement.querySelector('.error'));
   };
@@ -14,18 +14,18 @@
   // обработчик события при нажатии клавиши для окна с ошибкой
   var onErrorModalKeydown = function (e) {
     if (e.keyCode === window.consts.ESC_KEY_NUMBER) {
-      closeErrorModal();
+      closeError();
     }
   };
 
   // открытие окна ошибки
-  var openErrorModal = function (onResetButtonClick) {
+  var openError = function (onResetButtonClick) {
     var errorModalTemplate = errorModal.content.cloneNode(true);
     var errorModalContent = errorModalTemplate.querySelector('.error');
 
     var onErrorModalClick = function (e) {
       if (e.target === errorModalContent) {
-        closeErrorModal();
+        closeError();
       }
     };
 
@@ -39,7 +39,7 @@
   };
 
   // закрытие окна успешного создания объявления
-  var closeSuccessModal = function () {
+  var closeSuccess = function () {
     window.removeEventListener('keydown', onSuccessModalKeydown);
     window.utils.removeElement(mainElement.querySelector('.success'));
   };
@@ -47,22 +47,26 @@
   // обработчик события при нажатии клавиши для окна успеха
   var onSuccessModalKeydown = function (e) {
     if (e.keyCode === window.consts.ESC_KEY_NUMBER) {
-      closeSuccessModal();
+      closeSuccess();
     }
   };
 
+  var onSuccessModalClose = function () {
+    closeSuccess();
+  };
+
   // открытие окна успешного создания объявления
-  var openSuccessModal = function () {
+  var openSuccess = function () {
     var successModalTemplate = successModal.content.cloneNode(true);
-    successModalTemplate.querySelector('.success').addEventListener('click', closeSuccessModal);
+    successModalTemplate.querySelector('.success').addEventListener('click', onSuccessModalClose);
     window.addEventListener('keydown', onSuccessModalKeydown);
     mainElement.append(successModalTemplate);
   };
 
   window.modal = {
-    closeErrorModal: closeErrorModal,
-    openErrorModal: openErrorModal,
-    closeSuccessModal: closeSuccessModal,
-    openSuccessModal: openSuccessModal
+    closeError: closeError,
+    openError: openError,
+    closeSuccess: closeSuccess,
+    openSuccess: openSuccess
   };
 })();

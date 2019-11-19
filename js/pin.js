@@ -46,7 +46,7 @@
   };
 
   // функция, которая деактивирует состояние пина
-  var deactivateAllPins = function () {
+  var deactivateAll = function () {
     document.querySelectorAll('.map__pin:not(.map__pin--main)').forEach(deactivatePin);
   };
 
@@ -58,7 +58,7 @@
   };
 
   // функция, возвращающая пин в исходное положение
-  var resetMainPinPosition = function () {
+  var resetMainPosition = function () {
     moveElement(mainPinElement, mainPinStartPosition.x, mainPinStartPosition.y);
     window.form.setAddressFieldValue(getAddress(mainPinStartPosition.x, mainPinStartPosition.y, true));
   };
@@ -75,16 +75,16 @@
 
     // обработчик, благодаря которому пользователь может открыть карточку любого доступного объявления
     var onPinClick = function () {
-      window.card.openNewCard(data);
-      deactivateAllPins();
+      window.card.open(data);
+      deactivateAll();
       activatePin(pinElement);
     };
 
     // обработчик открытия карточки объявления с клавиатуры, карточка объявления для выбранного пина открывается при нажатии на клавишу Enter
     var onPinKeydown = function (e) {
       if (e.keyCode === window.consts.ENTER_KEY_NUMBER) {
-        window.card.openNewCard(data);
-        deactivateAllPins();
+        window.card.open(data);
+        deactivateAll();
         activatePin(pinElement);
       }
     };
@@ -95,13 +95,13 @@
   };
 
   // функция, удаляющая пины, за исключением главного пина
-  var removeMapPins = function () {
+  var removeAll = function () {
     window.utils.removeElements(document.querySelectorAll('.map__pin:not(.map__pin--main)'));
   };
 
   // сгенерировать dom-елементы пинов и отобразить на карте
-  var renderMapPins = function (offers) {
-    removeMapPins();
+  var renderAll = function (offers) {
+    removeAll();
     var fragment = document.createDocumentFragment();
     var pinTemplate = document.querySelector('#pin')
       .content;
@@ -122,7 +122,7 @@
       x: e.clientX,
       y: e.clientY
     };
-    var xBoundaries = window.map.getMapWidth() - MAIN_PIN_WIDTH;
+    var xBoundaries = window.map.getWidth() - MAIN_PIN_WIDTH;
     var isDragged = false;
 
     // обработчик события для перестаскивания главного пина
@@ -169,14 +169,14 @@
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
 
-    window.page.togglePage(true);
+    window.page.toggle(true);
     window.form.setAddressFieldValue(getAddress(staticStartCoords.x, staticStartCoords.y));
   };
 
   // обработчик события для пина на карте, при нажатии клавиши ENTER
   var onMainPinKeydown = function (e) {
     if (e.keyCode === window.consts.ENTER_KEY_NUMBER) {
-      window.page.togglePage(true);
+      window.page.toggle(true);
       var staticStartCoords = getElementXY(mainPinElement);
       window.form.setAddressFieldValue(getAddress(staticStartCoords.x, staticStartCoords.y));
     }
@@ -188,10 +188,10 @@
   window.form.setAddressFieldValue(getAddress(mainPinStartPosition.x, mainPinStartPosition.y, true));
 
   window.pin = {
-    deactivateAllPins: deactivateAllPins,
-    removeMapPins: removeMapPins,
-    renderMapPins: renderMapPins,
-    resetMainPinPosition: resetMainPinPosition,
-    pinData: []
+    deactivateAll: deactivateAll,
+    removeAll: removeAll,
+    renderAll: renderAll,
+    resetMainPosition: resetMainPosition,
+    data: []
   };
 })();

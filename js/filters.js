@@ -17,7 +17,7 @@
   var guestFilter = document.querySelector('#housing-guests');
   var featureFilter = document.querySelector('#housing-features');
   var optimizedRender = window.utils.debounce(function (data) {
-    window.pin.renderMapPins(getMaxPins(filterData(filterValidOffers(data))));
+    window.pin.renderAll(getMaxPins(filterData(filterValidOffers(data))));
   }, DEBOUNCE_DELAY);
 
   // функция, возвращающая первоначальное состояние фильтров
@@ -47,7 +47,7 @@
   };
 
   // функция, сбрасывающая состояние всех фильтров
-  var resetAllFilters = function () {
+  var resetAll = function () {
     activeFilters = getDefaultFilters();
     for (var key in activeFilters) {
       if (!Object.prototype.hasOwnProperty.call(activeFilters, key)) {
@@ -63,7 +63,7 @@
   };
 
   // функция, переключающая активное состояние формы с фильтрами
-  var toggleFilters = function (areFiltersActive) {
+  var toggle = function (areFiltersActive) {
     filterElements.forEach(function (filterElement) {
       filterElement.disabled = !areFiltersActive;
     });
@@ -194,9 +194,9 @@
       activeFilters[selectedFilterType] = getCheckedBoxesValues(document.querySelectorAll(checkboxesSelector));
     }
 
-    optimizedRender(window.pin.pinData);
-    window.card.removeCard();
-    window.pin.deactivateAllPins();
+    optimizedRender(window.pin.data);
+    window.card.remove();
+    window.pin.deactivateAll();
   };
 
   housingTypeFilter.addEventListener('change', onFilterChange);
@@ -208,7 +208,7 @@
   window.filters = {
     filterValidOffers: filterValidOffers,
     getMaxPins: getMaxPins,
-    resetAllFilters: resetAllFilters,
-    toggleFilters: toggleFilters
+    resetAll: resetAll,
+    toggle: toggle
   };
 })();

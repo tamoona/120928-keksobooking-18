@@ -1,41 +1,41 @@
 'use strict';
 
 (function () {
-  var mapElement = document.querySelector('.map');
+  var element = document.querySelector('.map');
 
   // функция, переключающая состояние карты
-  var toggleMap = function (isMapActive) {
-    mapElement.classList.toggle('map--faded', !isMapActive);
+  var toggle = function (isMapActive) {
+    element.classList.toggle('map--faded', !isMapActive);
 
     // ранний возврат из функции для уменьшения количества уровней вложенности при отображении карты и пинов
     if (!isMapActive) {
-      window.pin.removeMapPins();
-      window.card.removeCard();
-      window.pin.resetMainPinPosition();
+      window.pin.removeAll();
+      window.card.remove();
+      window.pin.resetMainPosition();
       return;
     }
 
-    var onSuccess = function (pinData) {
-      window.pin.pinData = pinData;
-      window.pin.renderMapPins(window.filters.getMaxPins(window.filters.filterValidOffers(pinData)));
-      window.filters.toggleFilters(true);
+    var onSuccess = function (data) {
+      window.pin.data = data;
+      window.pin.renderAll(window.filters.getMaxPins(window.filters.filterValidOffers(data)));
+      window.filters.toggle(true);
     };
 
     var onError = function () {
-      window.modal.openErrorModal(window.modal.closeErrorModal);
+      window.modal.openError(window.modal.closeError);
     };
 
-    window.filters.toggleFilters(false);
+    window.filters.toggle(false);
     window.backend.loadPinData(onSuccess, onError);
   };
 
-  var getMapWidth = function () {
-    return mapElement.getBoundingClientRect().width;
+  var getWidth = function () {
+    return element.getBoundingClientRect().width;
   };
 
   window.map = {
-    toggleMap: toggleMap,
-    getMapWidth: getMapWidth,
-    mapElement: mapElement
+    toggle: toggle,
+    getWidth: getWidth,
+    element: element
   };
 })();
