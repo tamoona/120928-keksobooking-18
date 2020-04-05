@@ -12,12 +12,14 @@
   },
   "devDependencies": {
     "eslint": "6.3.0",
-    "eslint-config-htmlacademy": "0.5.2"
+    "eslint-config-htmlacademy": "0.5.2",
+    "push-dir": "^0.4.1"
   },
   "license": "MIT",
   "dependencies": {},
   "scripts": {
-    "test": "eslint js/"
+    "test": "eslint js/",
+    "deploy": "push-dir --dir=. --branch=gh-pages --cleanup"
   },
   "engines": {
     "node": "8.11"
