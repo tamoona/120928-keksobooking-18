@@ -1,8 +1,8 @@
 'use strict';
 
 (function () {
-  var SERVER_URL = 'https://js.dump.academy/keksobooking/data';
-  var SERVER_NEW_AD_URL = 'https://js.dump.academy/keksobooking';
+  var SERVER_URL = 'https://thawing-earth-81600.herokuapp.com/keksobooking/data';
+  var SERVER_NEW_AD_URL = 'https://thawing-earth-81600.herokuapp.com/keksobooking';
   var TIMEOUT = 10000;
   var RESPONSE_OK = 200;
 
