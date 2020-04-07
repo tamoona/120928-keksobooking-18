@@ -1,8 +1,8 @@
 'use strict';
 
 (function () {
-  var SERVER_URL = 'https://thawing-earth-81600.herokuapp.com/keksobooking/data';
-  var SERVER_NEW_AD_URL = 'https://thawing-earth-81600.herokuapp.com/keksobooking';
+  var SERVER_URL = 'https://javascript.pages.academy/keksobooking/data';
+  var SERVER_NEW_AD_URL = 'https://javascript.pages.academy/keksobooking';
   var TIMEOUT = 10000;
   var RESPONSE_OK = 200;
 
@@ -33,11 +33,11 @@
   };
 
   var loadPinData = function (onSuccess, onError) {
-    request('GET', SERVER_URL, {onSuccess: onSuccess, onError: onError});
+    request('GET', SERVER_URL, { onSuccess: onSuccess, onError: onError });
   };
 
   var sendFormData = function (formData, onSuccess, onError) {
-    request('POST', SERVER_NEW_AD_URL, {onSuccess: onSuccess, onError: onError, data: formData});
+    request('POST', SERVER_NEW_AD_URL, { onSuccess: onSuccess, onError: onError, data: formData });
   };
 
   window.backend = {
